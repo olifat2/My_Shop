@@ -33,7 +33,7 @@
             @csrf
 
             <!-- Email Field -->
-            <div class="form-group">
+            <div class="auth-form-group">
                 <label for="email">Email</label>
                 <input
                     type="email"
@@ -50,7 +50,7 @@
             </div>
 
             <!-- Password Field -->
-            <div class="form-group">
+            <div class="auth-form-group">
                 <label for="password">Mot de passe</label>
                 <input
                     type="password"
@@ -91,12 +91,12 @@
         <!-- Links Section -->
         <div class="auth-links">
             <div class="auth-link-item">
-                <a href="#" class="link-secondary">
+                <a href="#" class="auth-link-secondary">
                     🔑 Mot de passe oublié ?
                 </a>
             </div>
             <div class="auth-link-item">
-                <a href="{{ route('register.form') }}" class="link-primary">
+                <a href="{{ route('register.form') }}" class="auth-link-primary">
                     📝 Créer un compte
                 </a>
             </div>
@@ -104,10 +104,11 @@
 
         <!-- Back to Home -->
         <div class="auth-footer">
-            <a href="{{ route('accueil') }}" class="link-back">
+            <a href="{{ route('accueil') }}" class="auth-link-back">
                 ← Retour à l'accueil
             </a>
         </div>
     </div>
 </div>
 @endsection
+

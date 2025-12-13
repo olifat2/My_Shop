@@ -25,7 +25,7 @@ if (prev && next && dots.length > 0) {
     // Cliquer sur un point pour naviguer
     dots.forEach(dot => {
         dot.addEventListener('click', () => {
-            index = parseInt(dot.getAttribute('data-index'));
+            index = Number.parseInt(dot.getAttribute('data-index'));
             showSlide(index);
         });
     });

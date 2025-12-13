@@ -3,7 +3,7 @@
 @section('content')
 <!-- Hero Section with Carousel -->
 <section class="hero-section">
-    <h1 class="visually-hidden">Bienvenue sur MyShop - Soins capillaires et extensions de qualité</h1>
+    <h1 class="homepage-title">Bienvenue sur MyShop - Soins capillaires et extensions de qualité</h1>
 
     <div class="carousel-container">
         <div class="slides">
@@ -216,5 +216,5 @@
         </form>
     </div>
 </section>
-
 @endsection
+

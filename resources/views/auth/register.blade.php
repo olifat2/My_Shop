@@ -33,7 +33,7 @@
             @csrf
 
             <!-- First Name Field -->
-            <div class="form-group">
+            <div class="auth-form-group">
                 <label for="firstname">Prénom</label>
                 <input
                     type="text"
@@ -50,7 +50,7 @@
             </div>
 
             <!-- Last Name Field -->
-            <div class="form-group">
+            <div class="auth-form-group">
                 <label for="lastname">Nom</label>
                 <input
                     type="text"
@@ -66,7 +66,7 @@
             </div>
 
             <!-- Email Field -->
-            <div class="form-group">
+            <div class="auth-form-group">
                 <label for="email">Email</label>
                 <input
                     type="email"
@@ -82,7 +82,7 @@
             </div>
 
             <!-- Password Field -->
-            <div class="form-group">
+            <div class="auth-form-group">
                 <label for="password">Mot de passe</label>
                 <input
                     type="password"
@@ -98,7 +98,7 @@
             </div>
 
             <!-- Password Confirmation Field -->
-            <div class="form-group">
+            <div class="auth-form-group">
                 <label for="password_confirmation">Confirmer le mot de passe</label>
                 <input
                     type="password"
@@ -138,18 +138,19 @@
 
         <!-- Already have account -->
         <div class="auth-center-link">
-            Vous avez déjà un compte ?
-            <a href="{{ route('login.form') }}" class="link-primary">
+            <p> Vous avez déjà un compte ?</p>
+            <a href="{{ route('login.form') }}" class="auth-link-primary">
                 Se connecter
             </a>
         </div>
 
         <!-- Back to Home -->
         <div class="auth-footer">
-            <a href="{{ route('accueil') }}" class="link-back">
+            <a href="{{ route('accueil') }}" class="auth-link-back">
                 ← Retour à l'accueil
             </a>
         </div>
     </div>
 </div>
 @endsection
+

@@ -7,11 +7,12 @@
 
     <nav class="nav-menu" id="nav-menu" role="navigation">
         <ul class="nav-links" id="nav-links">
-            @auth
+            <!-- @auth
             <li><a href="{{ route('client.accueil') }}">Accueil</a></li>
             @else
             <li><a href="{{ route('accueil') }}">Accueil</a></li>
-            @endauth
+            @endauth -->
+            <li><a href="{{ route('accueil') }}">Accueil</a></li>
             <li><a href="{{ route('client.catalogue') }}">Produits</a></li>
             <li class="dropdown">
                 <a href="#" class="dropdown-toggle">
@@ -28,10 +29,9 @@
     </nav>
 
     <div class="user-header-actions">
-        <form class="search-form" action="{{ route('client.catalogue') }}" method="get" role="search">
-            <label for="header-search" class="sr-only">Rechercher des produits</label>
+        <form class="search-form" action="#" method="get" role="search">
             <input id="header-search" name="q" type="search" placeholder="Rechercher des produits..." aria-label="Rechercher des produits">
-            <button type="submit" class="search-btn" aria-label="Rechercher">🔍</button>
+            <button type="submit" class="btn-header-search" aria-label="Rechercher">🔍</button>
         </form>
 
         <a href="#" class="cart-link" aria-label="Voir le panier">
@@ -46,7 +46,7 @@
         @auth
         <form class="first-form" action="{{ route('logout') }}" method="post">
             @csrf
-            <button type="submit" class="btn-header-login btn-icon">
+            <button type="submit" class="btn-header-first btn-icon">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
                     <path d="M16 13v-2H7V8l-5 4 5 4v-3h9z" fill="currentColor" />
                     <path d="M20 3H4a1 1 0 00-1 1v4h2V5h14v14H5v-3H3v4a1 1 0 001 1h16a1 1 0 001-1V4a1 1 0 00-1-1z" fill="currentColor" opacity="0.9" />
@@ -57,7 +57,7 @@
 
         <form class="second-form" action="{{ route('client.dashboard') }}" method="get">
             @csrf
-            <button type="submit" class="btn-header-signup btn-icon">
+            <button type="submit" class="btn-header-second btn-icon">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
                     <path d="M12 12a5 5 0 100-10 5 5 0 000 10zM2 20a10 10 0 0120 0H2z" fill="currentColor" />
                 </svg>
@@ -67,7 +67,7 @@
         @else
         <form class="first-form" action="{{ route('login.form') }}" method="get">
             @csrf
-            <button type="submit" class="btn-header-login btn-icon">
+            <button type="submit" class="btn-header-first btn-icon">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
                     <path d="M15 3H5a2 2 0 00-2 2v14h2V5h10V3z" fill="currentColor" />
                     <path d="M21 12l-4-4v3h-5v2h5v3l4-4z" fill="currentColor" />
@@ -78,7 +78,7 @@
 
         <form class="second-form" action="{{ route('register.form') }}" method="get">
             @csrf
-            <button type="submit" class="btn-header-signup btn-icon">
+            <button type="submit" class="btn-header-second btn-icon">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
                     <path d="M12 12a5 5 0 100-10 5 5 0 000 10z" fill="currentColor" />
                     <path d="M2 20a10 10 0 0120 0H2z" fill="currentColor" opacity="0.9" />
@@ -89,3 +89,4 @@
         @endauth
     </div>
 </div>
+
