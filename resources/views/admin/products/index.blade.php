@@ -1,10 +1,42 @@
 @extends('layouts.auth-admin.app')
 
 @section('content')
-<div class="admin-container">
-    <div class="header-actions actions-index">
-        <h1>Produits</h1>
-        <a href="{{ route('admin.products.create') }}" class="btn-product product-add">Nouveau produit</a>
+<div class="admin-container-index">
+    <div class="dashboard-header">
+        <div>
+            <h1>Produits</h1>
+            <p class="subtitle">Bienvenue ! Voici la liste de tous vos produits</p>
+        </div>
+        <div class="header-actions-dash">
+            <a href="{{ route('admin.products.create') }}" class="btn btn-primary">➕ Nouveau produit</a>
+        </div>
+    </div>
+
+    <div class="product-filters">
+        <div class="filter-group">
+            <input
+                type="search"
+                id="productSearch"
+                placeholder="Rechercher un produit..."
+                class="filter-input">
+        </div>
+
+        <div class="filter-group">
+            <select id="categoryFilter" class="filter-select">
+                <option value="">Toutes les catégories</option>
+                <option value="produit_capillaire">Produits capillaires</option>
+                <option value="meche_extension">Mèches & extensions</option>
+            </select>
+        </div>
+
+        <div class="filter-group">
+            <select id="stockFilter" class="filter-select">
+                <option value="">Tous les stocks</option>
+                <option value="in">En stock</option>
+                <option value="low">Stock faible</option>
+                <option value="out">Rupture</option>
+            </select>
+        </div>
     </div>
 
     @if (session('success'))
@@ -13,7 +45,7 @@
     </div>
     @endif
 
-    <div class="table-container">
+    <div class="table-responsive">
         <table class="table-product">
             <thead>
                 <tr>
@@ -21,38 +53,58 @@
                     <th>Identification</th>
                     <th>Prix (FCFA)</th>
                     <th>Stock</th>
-                    <th>Détails</th>
                     <th>Actions</th>
                 </tr>
             </thead>
             <tbody>
                 @forelse($products as $product)
-                <tr>
-                    <td>{{ $loop->iteration }}</td>
-                    <td>{{ $product->categorie === 'produit_capillaire' ? $product->produitCapillaire->nom : $product->mecheExtension->style }}</td>
-                    <td>{{ number_format($product->prix_unitaire, 0, ',', ' ') }}</td>
-                    <td>{{ $product->stock->sum('quantite') }}</td>
-                    <td class="details-product">
-                        <a href="{{ route('admin.products.show', $product->id) }}" class="btn-product product-show">Voir la fiche</a>
+                @php $qty = $product->stock->sum('quantite'); @endphp
+                <tr
+                    data-name="{{
+                        strtolower($product->categorie === 'produit_capillaire'
+                            ? $product->produitCapillaire->nom
+                            : $product->mecheExtension->style)
+                    }}"
+                    data-category="{{ $product->categorie }}"
+                    data-stock="{{ $product->stock->sum('quantite') }}">
+                    <td data-label="#">{{ $loop->iteration }}</td>
+                    <td data-label="Produit">
+                        {{
+                            $product->categorie === 'produit_capillaire'
+                                ? $product->produitCapillaire->nom
+                                : $product->mecheExtension->style
+                        }}
                     </td>
-                    <td class="actions-product">
-                        <div class="actions-wrapper">
-                            <a href="{{ route('admin.products.edit', $product->id) }}" class="btn-product product-edit">Modifier ses informations</a>
-                            <form method="POST" action="{{ route('admin.products.destroy', $product->id) }}" onsubmit="return confirm('Supprimer ce produit ?');">
+                    <td data-label="Prix">
+                        {{ number_format($product->prix_unitaire, 0, ',', ' ') }}
+                    </td>
+                    <td data-label="Stock">
+                        <span class="stock-badge {{ $qty > 10 ? 'stock-high' : ($qty > 0 ? 'stock-medium' : 'stock-low') }}">
+                            {{ $qty }}
+                        </span>
+                    </td>
+                    <td data-label="Actions">
+                        <div class="action-buttons">
+                            <a href="{{ route('admin.products.show', $product->id) }}" class="btn-action btn-view" title="Voir">👁️</a>
+                            <a href="{{ route('admin.products.edit', $product->id) }}" class="btn-action btn-edit" title="Modifier">✏️</a>
+                            <form method="POST" action="{{ route('admin.products.destroy', $product->id) }}" style="display: inline;">
                                 @csrf
                                 @method('DELETE')
-                                <button class="btn-product product-delete" type="submit">Supprimer</button>
+                                <button type="submit" class="btn-action btn-delete" title="Supprimer" onclick="return confirm('Êtes-vous sûr ?')">🗑️</button>
                             </form>
                         </div>
                     </td>
                 </tr>
                 @empty
                 <tr>
-                    <td colspan="7">Aucun produit enregistré.</td>
+                    <td colspan="6">Aucun produit enregistré.</td>
                 </tr>
                 @endforelse
             </tbody>
         </table>
+    </div>
+    <div class="pagination-wrapper">
+        {{ $products->links() }}
     </div>
 </div>
 @endsection

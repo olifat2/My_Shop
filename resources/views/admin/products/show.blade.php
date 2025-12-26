@@ -2,9 +2,14 @@
 
 @section('content')
 <div class="admin-container">
-    <div class="header-actions actions-show">
-        <h1>Détails du produit</h1>
-        <a href="{{ route('admin.products.index') }}" class="btn-product product-back">Retour à la liste</a>
+    <div class="dashboard-header">
+        <div>
+            <h1>Détails du produit</h1>
+            <p class="subtitle">...</p>
+        </div>
+        <div class="header-actions-dash">
+            <a href="{{ route('admin.products.index') }}" class="btn btn-primary">Retour</a>
+        </div>
     </div>
     <div class="card-detail-product">
         <div class="divider first"></div>

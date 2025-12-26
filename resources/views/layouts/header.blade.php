@@ -1,5 +1,11 @@
-<div class="navbar">
-    <div class="nav-logo">myshop</div>
+<header class="navbar" role="banner">
+    <div class="nav-logo">
+        @auth
+        <a href="{{ route('client.accueil') }}">myshop</a>
+        @else
+        <a href="{{ route('accueil') }}">myshop</a>
+        @endauth
+    </div>
 
     <button class="nav-toggle" id="nav-toggle" aria-controls="nav-menu" aria-expanded="false" aria-label="Ouvrir le menu">
         <span class="hamburger" aria-hidden="true"></span>
@@ -7,15 +13,15 @@
 
     <nav class="nav-menu" id="nav-menu" role="navigation">
         <ul class="nav-links" id="nav-links">
-            <!-- @auth
+            @auth
             <li><a href="{{ route('client.accueil') }}">Accueil</a></li>
+            <li><a href="{{ route('client.index') }}">Produits</a></li>
             @else
             <li><a href="{{ route('accueil') }}">Accueil</a></li>
-            @endauth -->
-            <li><a href="{{ route('accueil') }}">Accueil</a></li>
-            <li><a href="{{ route('client.catalogue') }}">Produits</a></li>
+            <li><a href="{{ route('catalogue') }}">Produits</a></li>
+            @endauth
             <li class="dropdown">
-                <a href="#" class="dropdown-toggle">
+                <a href="#" class="dropdown-toggle" aria-haspopup="true" aria-expanded="false">
                     Catégories <span class="arrow">▾</span>
                 </a>
                 <ul class="dropdown-menu">
@@ -34,15 +40,23 @@
             <button type="submit" class="btn-header-search" aria-label="Rechercher">🔍</button>
         </form>
 
-        <a href="#" class="cart-link" aria-label="Voir le panier">
+        @auth
+        <a href="{{ route('client.cart') }}" class="cart-link">
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
                 <path d="M6 6H4V4H6V6Z" fill="currentColor" opacity="0" />
                 <path d="M7 4H3V6H5L8 14H19V12H9.42L8.2 8H20V6H8.6L8 4H7Z" fill="currentColor" />
                 <circle cx="10" cy="20" r="1" fill="currentColor" />
                 <circle cx="18" cy="20" r="1" fill="currentColor" />
             </svg>
-            <span class="cart-count" aria-hidden="true">0</span>
+            @php
+            $cartCount = collect(session('cart', []))->sum('qty');
+            @endphp
+
+            @if($cartCount > 0)
+            <span class="cart-count">{{ $cartCount }}</span>
+            @endif
         </a>
+        @endauth
         @auth
         <form class="first-form" action="{{ route('logout') }}" method="post">
             @csrf
@@ -88,5 +102,4 @@
         </form>
         @endauth
     </div>
-</div>
-
+</header>

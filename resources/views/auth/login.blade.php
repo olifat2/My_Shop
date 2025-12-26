@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="auth-container">
-    <div class="auth-card">
+    <div class="card">
         <!-- Header -->
         <div class="auth-header">
             <h1>Se connecter</h1>
@@ -33,7 +33,7 @@
             @csrf
 
             <!-- Email Field -->
-            <div class="auth-form-group">
+            <div class="form-group">
                 <label for="email">Email</label>
                 <input
                     type="email"
@@ -50,7 +50,7 @@
             </div>
 
             <!-- Password Field -->
-            <div class="auth-form-group">
+            <div class="form-group">
                 <label for="password">Mot de passe</label>
                 <input
                     type="password"

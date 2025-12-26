@@ -3,15 +3,39 @@
 @section('title', 'Modifier le produit')
 
 @section('content')
-<div class="container-edit">
-    <div class="card-edit">
-        <h2 class="edit-title">Modifier le produit</h2>
-
-        <div class="divider"></div>
+<div class="edit-container">
+    <div class="card">
+        <div class="dashboard-header">
+            <div>
+                <h1>Modifier le produit</h1>
+                <p class="subtitle">...</p>
+            </div>
+        </div>
 
         <form action="{{ route('admin.products.update', $product->id) }}" method="POST">
             @csrf
             @method('PUT')
+
+            <div class="form-group">
+                <label for="poids">Nom du produit</label>
+                <input type="text"
+                    id="{{
+                        $product->categorie === 'produit_capillaire'
+                            ? "nom"
+                            : "marque"
+                    }}"
+                    name="{{
+                        $product->categorie === 'produit_capillaire'
+                            ? "nom"
+                            : "marque"
+                    }}"
+                    value="{{
+                            $product->categorie === 'produit_capillaire'
+                                ? old('nom', $product->produitCapillaire->nom)
+                                : old('marque', $product->mecheExtension->style)
+                    }}"
+                    required>
+            </div>
 
             <div class="form-group">
                 <label for="poids">Poids (g)</label>
@@ -29,8 +53,8 @@
             </div>
 
             <div class="form-actions">
-                <button type="submit" class="btn-save">Enregistrer</button>
-                <a href="{{ route('admin.products.index') }}" class="btn-cancel">Annuler</a>
+                <button type="submit" class="btn btn-primary">Enregistrer</button>
+                <a href="{{ route('admin.products.index') }}" class="btn btn-secondary">Annuler</a>
             </div>
         </form>
     </div>

@@ -2,11 +2,14 @@
 
 @section('content')
 <div class="admin-container">
-    <div class="header-actions actions-create">
-        <h1>Ajouter un produit</h1>
-        <a href="{{ route('admin.products.index') }}" class="btn-product product-back">
-            <i class="fa fa-arrow-left"></i> Retour à la liste
-        </a>
+    <div class="dashboard-header">
+        <div>
+            <h1>Créer un produit</h1>
+            <p class="subtitle">Ici vous pouvez ajouter vos produits et les enregistrer !</p>
+        </div>
+        <div class="header-actions-dash">
+            <a href="{{ route('admin.products.index') }}" class="btn btn-primary">Retour</a>
+        </div>
     </div>
 
     @if (session('success'))
@@ -16,13 +19,13 @@
     @endif
 
     <div class="form-product-container">
-        <form action="{{ route('admin.products.store') }}" method="POST" class="form-product product-create">
+        <form action="{{ route('admin.products.store') }}" method="POST" class="form-product">
             @csrf
 
             <!-- Choix de la catégorie -->
             <div class="item-product">
                 <label for="categorie">Catégorie du produit :</label>
-                <select name="categorie" id="categorie" required>
+                <select class="category-select" name="categorie" id="categorie" required>
                     <option value="">-- Sélectionnez une catégorie --</option>
                     <option value="meche_extension">MÈCHES / EXTENSION</option>
                     <option value="produit_capillaire">PRODUITS CAPILLAIRES</option>
@@ -120,7 +123,7 @@
             </div>
 
             <div>
-                <button type="submit" class="btn-product product-save">Enregistrer</button>
+                <button type="submit" class="btn btn-primary">Enregistrer</button>
             </div>
         </form>
     </div>
@@ -132,11 +135,11 @@
             <!-- Choix de la technique -->
             <div class="item-product">
                 <label for="nom">Technique de pose de vos mèches :</label>
-                <input type="text" name="nom" id="nom">
+                <input type="text" name="nom" id="nomTechniquePose">
             </div>
 
             <div>
-                <button type="submit" class="btn-product product-save">Enregistrer</button>
+                <button type="submit" class="btn btn-primary">Enregistrer</button>
             </div>
         </form>
     </div>
@@ -148,11 +151,11 @@
             <!-- Choix de la nature des produits -->
             <div class="item-product">
                 <label for="nom">Nature d'action de vos produits :</label>
-                <input type="text" name="nom" id="nom">
+                <input type="text" name="nom" id="nomNatureAction">
             </div>
 
             <div>
-                <button type="submit" class="btn-product product-save">Enregistrer</button>
+                <button type="submit" class="btn btn-primary">Enregistrer</button>
             </div>
         </form>
     </div>
@@ -164,11 +167,11 @@
             <!-- Choix de l'effet des produits -->
             <div class="item-product">
                 <label for="nom">Effet de vos produits :</label>
-                <input type="text" name="nom" id="nom">
+                <input type="text" name="nom" id="nomEffetProduit">
             </div>
 
             <div>
-                <button type="submit" class="btn-product product-save">Enregistrer</button>
+                <button type="submit" class="btn btn-primary">Enregistrer</button>
             </div>
         </form>
     </div>

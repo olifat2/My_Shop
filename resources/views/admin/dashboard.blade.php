@@ -10,7 +10,7 @@
             <h1>Tableau de Bord</h1>
             <p class="subtitle">Bienvenue ! Voici un aperçu de votre boutique</p>
         </div>
-        <div class="header-actions">
+        <div class="header-actions-dash">
             <a href="{{ route('admin.products.create') }}" class="btn btn-primary">➕ Nouveau produit</a>
         </div>
     </div>
@@ -96,17 +96,18 @@
                         </thead>
                         <tbody>
                             @forelse ($latestProductsMeche as $product)
+                            @php $qty = $product->stock->sum('quantite'); @endphp
                             <tr>
-                                <td><span class="cell-label">{{ $product->mecheExtension->nature }}</span></td>
-                                <td><span class="cell-brand">{{ ucfirst($product->mecheExtension->marque) }}</span></td>
-                                <td><span class="cell-price">{{ number_format($product->prix_unitaire, 0, ',', ' ') }} FCFA</span></td>
-                                <td>
-                                    <span class="stock-badge {{ $product->stock->sum('quantite') > 10 ? 'stock-high' : ($product->stock->sum('quantite') > 0 ? 'stock-medium' : 'stock-low') }}">
-                                        {{ $product->stock->sum('quantite') }} unités
+                                <td data-label="Nature"><span class="cell-label">{{ $product->mecheExtension->nature }}</span></td>
+                                <td data-label="Marque"><span class="cell-brand">{{ ucfirst($product->mecheExtension->marque) }}</span></td>
+                                <td data-label="Prix"><span class="cell-price">{{ number_format($product->prix_unitaire, 0, ',', ' ') }} FCFA</span></td>
+                                <td data-label="Stock">
+                                    <span class="stock-badge {{ $qty > 10 ? 'stock-high' : ($qty > 0 ? 'stock-medium' : 'stock-low') }}">
+                                        {{ $qty }} unités
                                     </span>
                                 </td>
-                                <td><small>{{ $product->created_at->format('d/m/Y') }}</small></td>
-                                <td>
+                                <td data-label="Date ajout"><small>{{ $product->created_at->format('d/m/Y') }}</small></td>
+                                <td data-label="Actions">
                                     <div class="action-buttons">
                                         <a href="{{ route('admin.products.show', $product->id) }}" class="btn-action btn-view" title="Voir">👁️</a>
                                         <a href="{{ route('admin.products.edit', $product->id) }}" class="btn-action btn-edit" title="Modifier">✏️</a>
@@ -149,16 +150,16 @@
                         <tbody>
                             @forelse ($latestProductsCapillaire as $product)
                             <tr>
-                                <td><span class="cell-label">{{ $product->produitCapillaire->effet->nom }}</span></td>
-                                <td><span class="cell-name">{{ ucfirst($product->produitCapillaire->nom) }}</span></td>
-                                <td><span class="cell-price">{{ number_format($product->prix_unitaire, 0, ',', ' ') }} FCFA</span></td>
-                                <td>
+                                <td data-label="Effet"><span class="cell-label">{{ $product->produitCapillaire->effet->nom }}</span></td>
+                                <td data-label="Nom"><span class="cell-brand">{{ ucfirst($product->produitCapillaire->nom) }}</span></td>
+                                <td data-label="Prix"><span class="cell-price">{{ number_format($product->prix_unitaire, 0, ',', ' ') }} FCFA</span></td>
+                                <td data-label="Stock">
                                     <span class="stock-badge {{ $product->stock->sum('quantite') > 10 ? 'stock-high' : ($product->stock->sum('quantite') > 0 ? 'stock-medium' : 'stock-low') }}">
                                         {{ $product->stock->sum('quantite') }} unités
                                     </span>
                                 </td>
-                                <td><small>{{ $product->created_at->format('d/m/Y') }}</small></td>
-                                <td>
+                                <td data-label="Date ajout"><small>{{ $product->created_at->format('d/m/Y') }}</small></td>
+                                <td data-label="Actions">
                                     <div class="action-buttons">
                                         <a href="{{ route('admin.products.show', $product->id) }}" class="btn-action btn-view" title="Voir">👁️</a>
                                         <a href="{{ route('admin.products.edit', $product->id) }}" class="btn-action btn-edit" title="Modifier">✏️</a>
@@ -208,12 +209,18 @@
                     $lowItems = collect();
                     if(isset($latestProductsMeche)) {
                     foreach($latestProductsMeche as $p) {
-                    if($p->stock->sum('quantite') <= 3) $lowItems->push($p);
+                    if($p->stock->sum('quantite') <= 3)
+                        {
+                        $lowItems->push($p);
+                        }
                         }
                         }
                         if(isset($latestProductsCapillaire)) {
                         foreach($latestProductsCapillaire as $p) {
-                        if($p->stock->sum('quantite') <= 3) $lowItems->push($p);
+                        if($p->stock->sum('quantite') <= 3)
+                            {
+                            $lowItems->push($p);
+                            }
                             }
                             }
                             }
@@ -222,7 +229,7 @@
                             @forelse($lowItems->take(6) as $item)
                             <li>
                                 <a href="{{ route('admin.products.show', $item->id) }}">{{ Str::limit($item->produitCapillaire->nom ?? $item->mecheExtension->marque ?? 'Produit', 28) }}
-                                    <span class="stock-count">{{ $item->stock->sum('quantite') }} unités</span>
+                                    <span class="stock-count">({{ $item->stock->sum('quantite') }} unités)</span>
                                 </a>
                             </li>
                             @empty

@@ -1,5 +1,5 @@
 <!-- Admin Topbar -->
-<nav class="admin-topbar">
+<nav class="admin-topbar" aria-label="admin-header">
     <div class="topbar-left">
         <button class="toggle-sidebar" id="toggleSidebar" aria-label="Menu">☰</button>
         <a href="{{ route('admin.dashboard') }}" class="admin-brand">
@@ -31,7 +31,7 @@
                 <div class="dropdown-divider"></div>
                 <form method="POST" action="{{ route('logout') }}" style="margin: 0;">
                     @csrf
-                    <button type="submit" class="dropdown-item logout-btn">🚪 Déconnexion</button>
+                    <button type="submit" class="dropdown-item-btn logout-btn">🚪 Déconnexion</button>
                 </form>
             </div>
         </div>
@@ -45,7 +45,7 @@
         <button class="close-sidebar" id="closeSidebar" aria-label="Fermer">✕</button>
     </div>
 
-    <nav class="sidebar-nav">
+    <nav class="sidebar-nav" aria-label="admin-sidebar">
         <div class="nav-section">
             <div class="nav-section-title">Gestion</div>
             <ul class="nav-menu">
@@ -111,43 +111,3 @@
 
 <!-- Overlay for mobile -->
 <div class="sidebar-overlay" id="sidebarOverlay"></div>
-
-<script>
-    // Toggle sidebar
-    const toggleBtn = document.getElementById('toggleSidebar');
-    const closeBtn = document.getElementById('closeSidebar');
-    const sidebar = document.getElementById('adminSidebar');
-    const overlay = document.getElementById('sidebarOverlay');
-
-    toggleBtn.addEventListener('click', () => {
-        sidebar.classList.add('open');
-        overlay.classList.add('show');
-    });
-
-    closeBtn.addEventListener('click', () => {
-        sidebar.classList.remove('open');
-        overlay.classList.remove('show');
-    });
-
-    overlay.addEventListener('click', () => {
-        sidebar.classList.remove('open');
-        overlay.classList.remove('show');
-    });
-
-    // Profile dropdown
-    const profileToggle = document.getElementById('profileToggle');
-    const profileDropdown = document.getElementById('profileDropdown');
-
-    profileToggle.addEventListener('click', (e) => {
-        e.stopPropagation();
-        profileDropdown.classList.toggle('active');
-    });
-
-    document.addEventListener('click', () => {
-        profileDropdown.classList.remove('active');
-    });
-
-    profileDropdown.addEventListener('click', (e) => {
-        e.stopPropagation();
-    });
-</script>

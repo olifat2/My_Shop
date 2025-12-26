@@ -11,14 +11,14 @@ use App\Models\Stock;
 use App\Models\Technique_Pose;
 use Illuminate\Http\Request;
 
-class ProductController extends Controller
+class AdminProductController extends Controller
 {
     /**
      * Afficher la liste des produits.
      */
     public function index()
     {
-        $products = Product::with(['mecheExtension', 'produitCapillaire'])->get();
+        $products = Product::with(['mecheExtension', 'produitCapillaire'])->paginate(10);
         return view('admin.products.index', compact('products'));
     }
 

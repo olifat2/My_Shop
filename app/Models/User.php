@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -11,6 +10,7 @@ use Illuminate\Support\Facades\Hash;
 class User extends Authenticatable
 {
     use HasFactory, Notifiable;
+    protected $table = 'users';
 
     protected $fillable = [
         'firstname',
@@ -50,11 +50,29 @@ class User extends Authenticatable
         return $this->role === 'client';
     }
 
-    // Exemple : relation vers commandes
-    // public function commandes()
-    // {
-    //     return $this->hasMany(Commande::class);
-    // }
+    // Relations avec les modèles étendus
+    public function client()
+    {
+        return $this->hasOne(Client::class);
+    }
+
+    public function admin()
+    {
+        return $this->hasOne(Admin::class);
+    }
+
+    // Relation vers les commandes (via Client)
+    public function commandes()
+    {
+        return $this->hasManyThrough(
+            Commande::class,
+            Client::class,
+            'user_id',   // clé étrangère dans clients
+            'client_id', // clé étrangère dans commandes
+            'id',        // clé locale dans users
+            'id'         // clé locale dans clients
+        );
+    }
 
     // Exemple : favoris
     // public function favoris()

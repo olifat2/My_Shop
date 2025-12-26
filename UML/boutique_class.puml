@@ -1,0 +1,160 @@
+@startuml myshop
+left to right direction
+
+' Table parent : Products
+class Products {
+    - id : bigint
+    - categorie : Type
+    - poids : decimal
+    - prix_unitaire : decimal
+    - created_at : datetime
+    - updated_at : datetime
+}
+
+enum Type {
+    meches_extensions
+    produit_capillaire
+}
+
+' Stock lié à Products
+class Stock {
+    - id : bigint
+    - product_id : bigint
+    - quantite : int
+    - created_at : datetime
+}
+
+' Table enfant : Meches_Extensions
+class Meches_Extensions {
+    - id : bigint  ' PK & FK vers Products.id
+    - nature : Nature
+    - marque : string
+    - style : string
+    - technique_pose_id : int
+    - pcs : string
+    - height : decimal
+}
+
+enum Nature {
+    Synthétique
+    Naturelle
+}
+
+class Techniques_Poses {
+    - id : int
+    - nom : string
+}
+
+' Table enfant : Produits_Capillaires
+class Produits_Capillaires {
+    - id : bigint  ' PK & FK vers Products.id
+    - nom : string
+    - effet_id : int
+    - nature_action_id : int
+    - volume : string
+}
+
+class Effet {
+    - id : int
+    - nom : string
+}
+
+class Nature_Action {
+    - id : int
+    - nom : string
+}
+
+' Relations
+Products "1" -- "0..n" Stock
+Products "1" -- "0..1" Meches_Extensions
+Products "1" -- "0..1" Produits_Capillaires
+Meches_Extensions "0..n" -- "1" Techniques_Poses
+Produits_Capillaires "1" -- "1" Nature_Action
+Produits_Capillaires "1" -- "1" Effet
+
+'###############################
+' Utilisateur
+'###############################
+class User {
+    - id : int
+    - firstname : string
+    - lastname : string
+    - email : string <<unique>>
+    - password : string <<hashed>>
+    - phone : string
+    - role : Role
+    - imgProfil : string
+    - created_at : datetime
+    - updated_at : datetime
+
+    + sInscrire()
+    + seConnecter()
+    + mettreAJourProfil()
+    + changerMotDePasse()
+    + demanderReinitialisationMotDePasse()
+    + supprimerCompte()
+}
+
+enum Role {
+    admin
+    client
+}
+
+class Client {
+    + passerCommande()
+    + consulterHistoriqueCommandes()
+    + getFavoris()
+    + ajouterFavori()
+    + retirerFavori()
+    + laisserAvis()
+}
+
+class Admin {
+    + gererUtilisateurs()
+    + superviserPaiements()
+    + intervenirSurCommande()
+    + maintenirSysteme()
+}
+
+' Relations
+User "1" -- "0..1" Client
+User "1" -- "0..1" Admin
+
+'=========================
+' Commandes
+'=========================
+class Commandes {
+    - id : bigint
+    - client_id : int
+    - statut_id : int
+    - total : decimal
+    - created_at : datetime
+    - updated_at : datetime
+
+    + passerCommande()
+    + annulerCommande()
+    + obtenirDetails()
+}
+
+class Lignes_Commandes {
+    - id : bigint
+    - commande_id : bigint
+    - product_id : bigint
+    - quantite : int
+    - prix_unitaire : decimal
+    - subtotal : decimal
+}
+
+class Statut_Commande {
+    - id : int
+    - nom : string
+}
+
+' Relations
+Client "1" -- "0..n" Commandes
+Commandes "1" -- "0..n" Lignes_Commandes
+Lignes_Commandes "1" -- "1" Products
+Commandes "1" -- "1" Statut_Commande
+
+
+@enduml

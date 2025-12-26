@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="auth-container">
-    <div class="auth-card">
+    <div class="card">
         <!-- Header -->
         <div class="auth-header">
             <h1>Créer un compte</h1>
@@ -33,7 +33,7 @@
             @csrf
 
             <!-- First Name Field -->
-            <div class="auth-form-group">
+            <div class="form-group">
                 <label for="firstname">Prénom</label>
                 <input
                     type="text"
@@ -50,7 +50,7 @@
             </div>
 
             <!-- Last Name Field -->
-            <div class="auth-form-group">
+            <div class="form-group">
                 <label for="lastname">Nom</label>
                 <input
                     type="text"
@@ -66,7 +66,7 @@
             </div>
 
             <!-- Email Field -->
-            <div class="auth-form-group">
+            <div class="form-group">
                 <label for="email">Email</label>
                 <input
                     type="email"
@@ -82,7 +82,7 @@
             </div>
 
             <!-- Password Field -->
-            <div class="auth-form-group">
+            <div class="form-group">
                 <label for="password">Mot de passe</label>
                 <input
                     type="password"
@@ -98,7 +98,7 @@
             </div>
 
             <!-- Password Confirmation Field -->
-            <div class="auth-form-group">
+            <div class="form-group">
                 <label for="password_confirmation">Confirmer le mot de passe</label>
                 <input
                     type="password"
