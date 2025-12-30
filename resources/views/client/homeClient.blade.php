@@ -55,7 +55,7 @@
 
 <!-- Trust Elements Section -->
 <section class="trust-elements" aria-label="Garanties et services MyShop">
-    <div class="trust-container">
+    <div class="trust container">
         <article class="trust-item">
             <div class="trust-icon" aria-hidden="true">📦</div>
             <h3>Livraison gratuite</h3>
@@ -118,7 +118,7 @@
         <h2>Produits en vedette</h2>
         <p class="section-subtitle">Découvrez nos meilleurs ventes et nouveautés</p>
 
-        <div class="products-grid">
+        <div class="products-grid homeClient">
             @forelse ($highItems->take(4) as $item)
             <article class="product-card" data-id="{{ $item->id }}" data-category="{{ $item->categorie }}" data-name="{{ $item->categorie === 'produit_capillaire' ? $item->produitCapillaire->nom : $item->mecheExtension->style }}">
 
@@ -134,30 +134,28 @@
                     <p class="product-category">{{ $item->categorie === 'produit_capillaire' ? ucfirst(str_replace('_', ' ', $item->categorie)) : ucfirst(str_replace('_', ' et ', $item->categorie)) }}</p>
 
                     <!-- Note produit -->
-                    <div class="product-rating" aria-label="Note produit 5 étoiles">
-                        <span class="stars" aria-hidden="true">★★★★★</span>
-                        <span class="rating-count">(24 avis)</span>
+                    <div class="product-note">
+                        <div class="product-rating" aria-label="Note produit 5 étoiles">
+                            <span class="stars" aria-hidden="true">★★★★★</span>
+                            <span class="rating-count">(24 avis)</span>
+                        </div>
+                        <div class="product-price">
+                            <span>{{ number_format($item->prix_unitaire, 0, ',', ' ') }} FCFA</span>
+                        </div>
                     </div>
 
                     <!-- Footer produit: prix + ajout au panier -->
                     <div class="product-footer">
-                        <span class="product-price">{{ number_format($item->prix_unitaire, 0, ',', ' ') }} FCFA</span>
                         <form action="{{ route('client.cart.add', $item->id) }}" method="POST">
                             @csrf
-                            <button type="submit" class="btn-add" aria-label="Ajouter au panier">
+                            <button type="submit" class="btn btn-add" aria-label="Ajouter au panier">
                                 Ajouter au panier
                             </button>
                         </form>
                         {{-- Bouton Voir le produit / Détails --}}
-                        @auth
-                        <a href="{{ route('client.product.show', $item->id) }}" class="btn" aria-label="Voir le produit">
+                        <a href="{{ route('client.product.show', $item->id) }}" class="btn btn-secondary" aria-label="Voir le produit">
                             Voir le produit
                         </a>
-                        @else
-                        <a href="{{ route('product.show', $item->id) }}" class="btn" aria-label="Voir le produit">
-                            Voir le produit
-                        </a>
-                        @endauth
                     </div>
                 </div>
             </article>
@@ -167,7 +165,7 @@
         </div>
 
         <div class="view-all-container">
-            <a href="{{ route('catalogue') }}" class="btn btn-primary btn-large" aria-label="Voir tous les produits">Voir tous les produits</a>
+            <a href="{{ route('catalogue') }}" class="btn btn-primary" aria-label="Voir tous les produits">Voir tous les produits</a>
         </div>
     </div>
 </section>

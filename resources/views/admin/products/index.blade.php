@@ -18,11 +18,12 @@
                 type="search"
                 id="productSearch"
                 placeholder="Rechercher un produit..."
-                class="filter-input">
+                class="filter-input"
+                aria-label="Recherche produit">
         </div>
 
         <div class="filter-group">
-            <select id="categoryFilter" class="filter-select">
+            <select id="categoryFilter" class="filter-select" aria-label="Filtrer par catégorie">
                 <option value="">Toutes les catégories</option>
                 <option value="produit_capillaire">Produits capillaires</option>
                 <option value="meche_extension">Mèches & extensions</option>
@@ -38,12 +39,6 @@
             </select>
         </div>
     </div>
-
-    @if (session('success'))
-    <div class="alert-success">
-        {{ session('success') }}
-    </div>
-    @endif
 
     <div class="table-responsive">
         <table class="table-product">

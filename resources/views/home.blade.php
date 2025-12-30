@@ -54,7 +54,7 @@
 
 <!-- Trust Elements Section -->
 <section class="trust-elements">
-    <div class="trust-container">
+    <div class="trust container">
         <div class="trust-item">
             <div class="trust-icon">📦</div>
             <h3>Livraison gratuite</h3>
