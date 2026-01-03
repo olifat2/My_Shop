@@ -38,6 +38,10 @@
     </div>
 </nav>
 
+@php
+
+@endphp
+
 <!-- Sidebar Navigation -->
 <aside class="admin-sidebar" id="adminSidebar">
     <div class="sidebar-header">
@@ -56,10 +60,10 @@
                     </a>
                 </li>
                 <li>
-                    <a href="#" class="nav-link {{ request()->routeIs('admin.orders.*') ? 'active' : '' }}">
+                    <a href="{{ route('admin.orders.index') }}" class="nav-link {{ request()->routeIs('admin.orders.*') ? 'active' : '' }}">
                         <span class="nav-icon">📋</span>
                         <span class="nav-text">Commandes</span>
-                        <span class="nav-badge">12</span>
+                        <span class="nav-badge">{{ $totalOrders }}</span>
                     </a>
                 </li>
                 <li>

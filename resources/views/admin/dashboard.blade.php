@@ -67,7 +67,7 @@
             </div>
             <div class="stat-body">
                 <h3>Revenu</h3>
-                <p class="stat-value">{{ number_format(rand(500000, 5000000), 0, ',', ' ') }} FCFA</p>
+                <p class="stat-value">{{ number_format($orders->sum('total'),0,',',' ') }} FCFA</p>
                 <p class="stat-label">ce mois</p>
             </div>
             <div class="stat-chart"></div>
@@ -186,64 +186,41 @@
             <div class="widget widget-orders">
                 <h3>Commandes récentes</h3>
                 <ul class="orders-list">
-                    @if(isset($recentOrders) && $recentOrders->count())
-                    @foreach($recentOrders->take(5) as $order)
+                    @forelse($recentOrders as $order)
                     <li>
-                        <a href="{{ route('admin.orders.show', $order->id) }}">Commande #{{ $order->id }} — {{ number_format($order->total,0,',',' ') }} FCFA
-                            <span class="muted">· {{ $order->created_at->diffForHumans() }}</span>
+                        <a href="{{ route('admin.orders.show', $order->id) }}" class="btn btn-view">
+                            Commande #{{ $order->id }} — {{ number_format($order->total,0,',',' ') }} FCFA
                         </a>
+                        <span class="muted">· {{ $order->created_at->diffForHumans() }}</span>
                     </li>
-                    @endforeach
-                    @else
-                    <li class="empty-state">Aucune commande récente. <a href="{{ route('admin.orders.index') }}">Voir toutes</a></li>
-                    @endif
+                    @empty
+                    <li class="empty-state">Aucune commande récente.</li>
+                    @endforelse
                 </ul>
             </div>
 
             <div class="widget widget-lowstock">
                 <h3>Produits en faible stock</h3>
                 <ul class="lowstock-list">
-                    @php
-                    $lowItems = $lowStockProducts ?? collect();
-                    if(!isset($lowStockProducts)) {
-                    $lowItems = collect();
-                    if(isset($latestProductsMeche)) {
-                    foreach($latestProductsMeche as $p) {
-                    if($p->stock->sum('quantite') <= 3)
-                        {
-                        $lowItems->push($p);
-                        }
-                        }
-                        }
-                        if(isset($latestProductsCapillaire)) {
-                        foreach($latestProductsCapillaire as $p) {
-                        if($p->stock->sum('quantite') <= 3)
-                            {
-                            $lowItems->push($p);
-                            }
-                            }
-                            }
-                            }
-                            @endphp
-
-                            @forelse($lowItems->take(6) as $item)
-                            <li>
-                                <a href="{{ route('admin.products.show', $item->id) }}">{{ Str::limit($item->produitCapillaire->nom ?? $item->mecheExtension->marque ?? 'Produit', 28) }}
-                                    <span class="stock-count">({{ $item->stock->sum('quantite') }} unités)</span>
-                                </a>
-                            </li>
-                            @empty
-                            <li class="empty-state">Aucun produit faible en stock</li>
-                            @endforelse
+                    @forelse($items as $item)
+                    <li>
+                        <a href="{{ route('admin.products.show', $item->id) }}">
+                            {{ Str::limit($item->produitCapillaire->nom ?? $item->mecheExtension->marque ?? 'Produit', 28) }}
+                        </a>
+                        <span class="stock-count">({{ $item->stock->sum('quantite') }} unités)</span>
+                    </li>
+                    @empty
+                    <li class="empty-state">Aucun produit faible en stock</li>
+                    @endforelse
                 </ul>
             </div>
 
             <div class="widget widget-actions">
                 <h3>Actions rapides</h3>
                 <div class="quick-actions">
-                    <a href="{{ route('admin.products.create') }}" class="btn btn-ghost">Nouveau produit</a>
-                    <a href="{{ route('admin.orders.index') }}" class="btn btn-ghost">Toutes les commandes</a>
-                    <a href="{{ route('admin.clients.index') }}" class="btn btn-ghost">Clients</a>
+                    <a href="{{ route('admin.products.create') }}" class="btn btn-secondary">Nouveau produit</a>
+                    <a href="{{ route('admin.orders.index') }}" class="btn btn-secondary">Toutes les commandes</a>
+                    <a href="{{ route('admin.clients.index') }}" class="btn btn-secondary">Clients</a>
                 </div>
             </div>
         </aside>

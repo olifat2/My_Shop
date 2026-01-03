@@ -1470,30 +1470,6 @@ input:focus {
     }
 }
 
-.cart-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-bottom: 1.5rem;
-}
-
-.cart-table th,
-.cart-table td {
-    padding: 12px;
-    border-bottom: 1px solid var(--border);
-    text-align: left;
-}
-
-.cart-table input[type="number"] {
-    width: 60px;
-}
-
-.btn-remove {
-    background: none;
-    color: red;
-    border: none;
-    font-size: 1.2rem;
-}
-
 .cart-summary {
     text-align: right;
     font-size: 1.1rem;
@@ -1507,12 +1483,6 @@ input:focus {
 }
 
 @media (max-width: 500px) {
-
-    .cart-table th,
-    .cart-table td {
-        padding: 8px;
-        font-size: 0.85rem;
-    }
 
     .cart-actions {
         flex-direction: column;
@@ -2178,14 +2148,6 @@ input:focus {
     gap: 0.5rem;
 }
 
-.btn-ghost {
-    padding: 0.5rem;
-    border: 1px dashed var(--primary);
-    border-radius: 6px;
-    background: none;
-    text-align: center;
-}
-
 /* Responsive: stack dashboard on smaller screens */
 @media (max-width: 1315px) {
     .dashboard-layout {
@@ -2266,7 +2228,9 @@ input:focus {
     /* Mise en avant du produit */
     .table-product td[data-label="Produit"],
     .table-product td[data-label="Nom"],
-    .table-product td[data-label="Nature"] {
+    .table-product td[data-label="Nature"],
+    .table-product td[data-label="Client"],
+    .table-product td[data-label="Statut"] {
         font-size: 1rem;
         font-weight: 700;
         color: var(--primary);
@@ -2318,7 +2282,7 @@ input:focus {
 
 /* create produits */
 /* Reinforced admin sidebar rules consolidated later in file. */
-.form-product select {
+form select {
     border: none;
     border-radius: 10px;
     padding: 10px;
@@ -2335,9 +2299,7 @@ input:focus {
     flex-direction: column;
 }
 
-.item-product select:focus {
-    border-color: #ff6600;
-    box-shadow: 0 0 0 2px rgba(213, 177, 154, 0.2);
+select:focus {
     outline: none;
 }
 
@@ -2354,6 +2316,11 @@ input:focus {
     grid-template-columns: repeat(2, 1fr);
     gap: 10px;
     padding: 1rem;
+}
+
+/* show orders */
+.status-select {
+    width: 250px;
 }
 
 /* show products */
@@ -2433,6 +2400,13 @@ input:focus {
 
 .btn-secondary:hover {
     color: var(--primary-dark);
+}
+
+/* navigation */
+.navigation {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 }
 
 /* Animation */

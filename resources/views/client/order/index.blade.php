@@ -1,38 +1,49 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container">
-    <h1 class="text-2xl font-bold mb-4">Mes commandes</h1>
+<div>
+    <div class="dashboard-header">
+        <div>
+            <h1>Commandes</h1>
+            <p class="subtitle">Bienvenue ! Voici la liste de toutes vos commandes</p>
+        </div>
+    </div>
 
-    @if($orders->isEmpty())
-    <p>Vous n'avez encore passé aucune commande.</p>
-    @else
-    <table class="table-product">
-        <thead>
-            <tr>
-                <th>#</th>
-                <th>Référence</th>
-                <th>Date</th>
-                <th>Statut</th>
-                <th>Total (FCFA)</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach($orders as $order)
-            <tr>
-                <td>{{ $loop->iteration }}</td>
-                <td>{{ $order->id }}</td>
-                <td>{{ $order->created_at->format('d/m/Y') }}</td>
-                <td>{{ $order->statut->nom }}</td>
-                <td>{{ number_format($order->total,0,',',' ') }}</td>
-                <td>
-                    <a href="{{ route('client.orders.show', $order->id) }}" class="btn-product product-show">Voir</a>
-                </td>
-            </tr>
-            @endforeach
-        </tbody>
-    </table>
-    @endif
+    <div class="table-responsive">
+        <table class="table-product">
+            <thead>
+                <tr>
+                    <th>N°</th>
+                    <th>Référence</th>
+                    <th>Date</th>
+                    <th>Statut</th>
+                    <th>Total</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @forelse($orders as $order)
+                <tr>
+                    <td data-label="N°">{{ $loop->iteration }}</td>
+                    <td data-label="Référence">{{ $order->id }}</td>
+                    <td data-label="Date">{{ $order->created_at->format('d/m/Y') }}</td>
+                    <td data-label="Statut">{{ $order->statut->nom }}</td>
+                    <td data-label="Total">{{ number_format($order->total,0,',',' ') }} FCFA</td>
+                    <td data-label="Actions">
+                        <div class="action-buttons">
+                            <a href="{{ route('client.orders.show', $order->id) }}" class="btn-action btn-view" title="Voir">👁️</a>
+                        </div>
+                    </td>
+                </tr>
+                @empty
+                <tr>
+                    <td colspan="6">
+                        Vous n'avez encore passé aucune commande.
+                    </td>
+                </tr>
+                @endforelse
+            </tbody>
+        </table>
+    </div>
 </div>
 @endsection

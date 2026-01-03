@@ -119,7 +119,7 @@
         <p class="section-subtitle">Découvrez nos meilleurs ventes et nouveautés</p>
 
         <div class="products-grid homeClient">
-            @forelse ($highItems->take(4) as $item)
+            @forelse ($items as $item)
             <article class="product-card" data-id="{{ $item->id }}" data-category="{{ $item->categorie }}" data-name="{{ $item->categorie === 'produit_capillaire' ? $item->produitCapillaire->nom : $item->mecheExtension->style }}">
 
                 <!-- Image produit -->

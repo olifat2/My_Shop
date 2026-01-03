@@ -8,6 +8,9 @@
     <p><strong>Prénom :</strong> {{ $user->lastname }}</p>
     <p><strong>Email :</strong> {{ $user->email }}</p>
 
-    <p class="mt-6 text-gray-600 italic">Historique des commandes (à venir)</p>
+    <div class="commandes">
+        <p class="mt-6 text-gray-600 italic">Historique des commandes (à venir)</p>
+        <a href="{{ route('client.orders.index') }}" class="btn btn-primary" aria-label="Voir toutes les commandes">Voir toutes les commandes</a>
+    </div>
 </div>
 @endsection

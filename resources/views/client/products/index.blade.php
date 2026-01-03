@@ -83,13 +83,6 @@
             @endforelse
         </div>
 
-        <!-- Bouton voir tous les produits -->
-        <div class="view-all-container">
-            <a href="{{ route('catalogue') }}" class="btn btn-primary" aria-label="Voir tous les produits">
-                Voir tous les produits
-            </a>
-        </div>
-
     </div>
 </div>
 

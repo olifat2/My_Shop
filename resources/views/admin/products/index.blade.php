@@ -16,7 +16,7 @@
         <div class="filter-group">
             <input
                 type="search"
-                id="productSearch"
+                id="productAdminSearch"
                 placeholder="Rechercher un produit..."
                 class="filter-input"
                 aria-label="Recherche produit">
@@ -92,7 +92,7 @@
                 </tr>
                 @empty
                 <tr>
-                    <td colspan="6">Aucun produit enregistré.</td>
+                    <td colspan="5">Aucun produit enregistré.</td>
                 </tr>
                 @endforelse
             </tbody>
@@ -100,6 +100,10 @@
     </div>
     <div class="pagination-wrapper">
         {{ $products->links() }}
+    </div>
+
+    <div class="pagination-wrapper">
+        <nav class="navigation"></nav>
     </div>
 </div>
 @endsection

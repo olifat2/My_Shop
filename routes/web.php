@@ -54,6 +54,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     // CRUD Products / Orders / Clients
     Route::resource('/products', AdminProductController::class)->names('products');
     Route::resource('/orders', AdminOrderController::class)->names('orders');
+    Route::post('/orders/updateStatus/{id}', [AdminOrderController::class, 'updateStatus'])->name('orders.updateStatus');
     Route::resource('/clients', AdminClientController::class)->names('clients');
 });
 
@@ -80,9 +81,5 @@ Route::middleware(['auth', 'client'])->prefix('client')->name('client.')->group(
 
     Route::resource('/orders', ClientOrderController::class)->names('orders');
 
-
-    // Route::get('/orders', [ClientOrderController::class, 'index'])->name('orders.index');
-    // Route::get('/orders/{id}', [ClientOrderController::class, 'show'])->name('orders.show');
-    // Route::post('/orders', [ClientOrderController::class, 'store'])->name('orders.store');
     // Route::get('/orders/{id}/confirmation', [ClientOrderController::class, 'confirmation'])->name('orders.confirmation');
 });

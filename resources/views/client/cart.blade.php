@@ -14,43 +14,46 @@
     <p>Votre panier est vide.</p>
     <a href="{{ route('client.index') }}" class="btn btn-primary">Voir les produits</a>
     @else
-    <table class="cart-table">
-        <thead>
-            <tr>
-                <th>Produit</th>
-                <th>Prix</th>
-                <th>Quantité</th>
-                <th>Sous-total</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach($cart as $item)
-            <tr>
-                <td>{{ $item['name'] }}</td>
-                <td>{{ number_format($item['price'], 0, ',', ' ') }} FCFA</td>
+    <div class="table-responsive">
+        <table class="table-product">
+            <thead>
+                <tr>
+                    <th>Produit</th>
+                    <th>Prix</th>
+                    <th>Quantité</th>
+                    <th>Sous-total</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach($cart as $item)
+                <tr>
+                    <td data-label="Nom"><span class="cell-brand">{{ $item['name'] }}</span></td>
+                    <td data-label="Prix"><span class="cell-price">{{ number_format($item['price'], 0, ',', ' ') }} FCFA</span></td>
+                    <td data-label="Quantité">
+                        <form class="update-cart-form" action="{{ route('client.cart.update', $item['id']) }}" method="POST">
+                            @csrf
+                            <input type="number" name="qty" value="{{ $item['qty'] }}" min="1">
+                            <button type="submit" title="Modifier" class="btn-action btn-edit">OK</button>
+                        </form>
+                    </td>
 
-                <td>
-                    <form class="update-cart-form" action="{{ route('client.cart.update', $item['id']) }}" method="POST">
-                        @csrf
-                        <input type="number" name="qty" value="{{ $item['qty'] }}" min="1">
-                        <button type="submit">OK</button>
-                    </form>
-                </td>
+                    <td data-label="Total">{{ number_format($item['subtotal'], 0, ',', ' ') }} FCFA</td>
 
-                <td>{{ number_format($item['subtotal'], 0, ',', ' ') }} FCFA</td>
-
-                <td>
-                    <form action="{{ route('client.cart.remove', $item['id']) }}" method="POST">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit" class="btn-remove">✕</button>
-                    </form>
-                </td>
-            </tr>
-            @endforeach
-        </tbody>
-    </table>
+                    <td data-label="Actions">
+                        <div class="actions-buttons">
+                            <form action="{{ route('client.cart.remove', $item['id']) }}" method="POST" style="display: inline;">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="btn-action btn-delete" title="Supprimer">✕</button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+                @endforeach
+            </tbody>
+        </table>
+    </div>
 
     <div class="cart-summary">
         <strong>Total :</strong>
@@ -59,7 +62,10 @@
 
     <div class="cart-actions">
         <a href="{{ route('client.index') }}" class="btn btn-secondary">Continuer vos achats</a>
-        <a href="#" class="btn btn-primary">Passer la commande →</a>
+        <form action="{{ route('client.orders.store') }}" method="post">
+            @csrf
+            <button type="submit" class="btn btn-primary">Passer la commande →</button>
+        </form>
     </div>
     @endif
 

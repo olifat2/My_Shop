@@ -2,6 +2,15 @@
 
 @section('content')
 <div class="product-details-container max-w-6xl mx-auto p-6 bg-white shadow-lg rounded-lg">
+    <div class="dashboard-header">
+        <div>
+            <h1>Détails du produit</h1>
+            <p class="subtitle">...</p>
+        </div>
+        <div class="header-actions-dash">
+            <a href="{{ route('client.index') }}" class="btn btn-primary">Retour</a>
+        </div>
+    </div>
 
     <!-- Titre du produit -->
     <h1 class="text-3xl font-bold mb-6">{{ $product->categorie === 'produit_capillaire' ? $product->produitCapillaire->nom : $product->mecheExtension->style }}</h1>
@@ -10,7 +19,7 @@
 
         <!-- Image / Visuel -->
         <div class="product-image flex justify-center items-center">
-            <img src="{{ asset('img/intro.png') }}" alt="Image du produit" class="rounded-lg w-full max-w-md object-cover shadow-md">
+            <img src="{{ asset('img/intro.png') }}" alt="intro" class="rounded-lg w-full max-w-md object-cover shadow-md">
         </div>
 
         <!-- Informations du produit -->
@@ -45,7 +54,7 @@
             <div class="mt-6">
                 <form action="{{ route('client.cart.add', $product->id) }}" method="POST" class="add-to-cart-form">
                     @csrf
-                    <button type="submit" class="btn-add bg-orange-600 text-white px-6 py-3 rounded hover:bg-orange-700 transition">
+                    <button type="submit" class="btn btn-add">
                         Ajouter au panier
                     </button>
                 </form>

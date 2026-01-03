@@ -83,30 +83,30 @@ function initProfileDropdown() {
 }
 
 function initTableFilter() {
-    const searchInput = document.getElementById('productSearch');
+    const searchInputAdmin = document.getElementById('productAdminSearch');
     const categoryFilter = document.getElementById('categoryFilter');
     const stockFilter = document.getElementById('stockFilter');
     const rows = document.querySelectorAll('.table-product tbody tr');
-    if (!searchInput && !categoryFilter && !stockFilter) return;
+    if (!searchInputAdmin && !categoryFilter && !stockFilter) return;
 
-    const filterProducts = () => {
-        const search = searchInput?.value.toLowerCase() || '';
+    const filterProductsAdmin = () => {
+        const search = searchInputAdmin?.value.toLowerCase() || '';
         const category = categoryFilter?.value || '';
         const stock = stockFilter?.value || '';
         rows.forEach(row => {
             const name = row.dataset.name?.toLowerCase() || '';
             const rowCategory = row.dataset.category || '';
-            const qty = NumberparseInt(row.dataset.stock, 10) || 0;
+            const qty = Number.parseInt(row.dataset.stock, 10) || 0;
             let visible = true;
             if (search && !name.includes(search)) visible = false;
             if (category && rowCategory !== category) visible = false;
-            if (stock === 'in' && qty <= 10) visible = false;
-            if (stock === 'low' && (qty <= 0 || qty > 10)) visible = false;
+            if (stock === 'in' && qty <= 0) visible = false;
+            if (stock === 'low' && (qty <= 0 || qty > 5)) visible = false;
             if (stock === 'out' && qty > 0) visible = false;
             row.style.display = visible ? '' : 'none';
         });
     };
-    [searchInput, categoryFilter, stockFilter].forEach(el => el?.addEventListener('input', filterProducts));
+    [searchInputAdmin, categoryFilter, stockFilter].forEach(el => el?.addEventListener('input', filterProductsAdmin));
 }
 
 function initClientProductFilter() {
@@ -240,7 +240,7 @@ function rebuildMiniCart(miniCart, data, numberFormat) {
         miniCart.appendChild(totalDiv);
 
         const checkoutLink = document.createElement('a');
-        checkoutLink.href = '/cart';
+        checkoutLink.href = '//localhost:8000/client/panier';
         checkoutLink.className = 'btn btn-primary btn-checkout';
         checkoutLink.textContent = 'Voir le panier / Commander →';
         miniCart.appendChild(checkoutLink);

@@ -21,8 +21,8 @@ class ClientOrderController extends Controller
         $user = Auth::user();
         $client = $user->client;
 
-        $orders = $client->orders()
-            ->with('statutCommande')
+        $orders = $client->commandes()
+            ->with('statut')
             ->latest()
             ->get();
 
@@ -37,16 +37,18 @@ class ClientOrderController extends Controller
         $user = Auth::user();
         $client = $user->client;
 
-        $order = $client->orders()
+        $order = $client->commandes()
             ->where('id', $orderId)
             ->with([
-                'lignesCommandes.product.mecheExtension',
-                'lignesCommandes.product.produitCapillaire',
-                'statutCommande'
+                'items.product.mecheExtension',
+                'items.product.produitCapillaire',
+                'statut'
             ])
             ->firstOrFail();
 
-        return view('client.order.show', compact('order'));
+        $items = $order->items;
+
+        return view('client.order.show', compact('order', 'items'));
     }
 
     // =========================
@@ -71,7 +73,7 @@ class ClientOrderController extends Controller
 
             $commande = Commande::create([
                 'client_id' => $client->id,
-                'statut_commande_id' => $statut->id,
+                'statut_id' => $statut->id,
                 'total' => $total,
                 'reference' => 'CMD-' . strtoupper(uniqid()),
             ]);
@@ -80,8 +82,8 @@ class ClientOrderController extends Controller
                 CommandeItem::create([
                     'commande_id' => $commande->id,
                     'product_id' => $item['id'],
-                    'quantite' => $item['qty'],
-                    'prix_unitaire' => $item['price'],
+                    'quantity' => $item['qty'],
+                    'price' => $item['price'],
                     'subtotal' => $item['subtotal'],
                 ]);
             }
@@ -109,7 +111,7 @@ class ClientOrderController extends Controller
         $user = Auth::user();
         $client = $user->client;
 
-        $order = $client->orders()
+        $order = $client->commandes()
             ->with('statutCommande')
             ->findOrFail($orderId);
 

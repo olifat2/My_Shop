@@ -11,12 +11,13 @@ class ClientController extends Controller
     // Page d’accueil client (6 derniers produits)
     public function home()
     {
-        $latestProducts = Product::with(['mecheExtension', 'produitCapillaire'])->get();
+        $products = Product::with(['mecheExtension', 'produitCapillaire'])->get();
 
         // Filtrer les produits avec stock >= 10 pour les mettre en vedette
-        $highItems = collect($latestProducts)->filter(fn($p) => $p->stock->sum('quantite') >= 10);
+        $highItems = collect($products)->filter(fn($p) => $p->stock->sum('quantite') >= 10);
+        $items = $highItems->take(4);
 
-        return view('client.homeClient', compact('highItems'));
+        return view('client.homeClient', compact('items'));
     }
 
     // Catalogue complet
