@@ -8,7 +8,7 @@
             <p class="subtitle">Ici vous pouvez ajouter vos produits et les enregistrer !</p>
         </div>
         <div class="header-actions-dash">
-            <a href="{{ route('admin.products.index') }}" class="btn btn-primary">Retour</a>
+            <a href="{{ url()->previous() }}" class="btn btn-primary">Retour</a>
         </div>
     </div>
 

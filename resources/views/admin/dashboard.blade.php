@@ -11,7 +11,7 @@
             <p class="subtitle">Bienvenue ! Voici un aperçu de votre boutique</p>
         </div>
         <div class="header-actions-dash">
-            <a href="{{ route('admin.products.create') }}" class="btn btn-primary">➕ Nouveau produit</a>
+            <a href="{{ route('admin.products.create') }}" class="btn btn-primary">Nouveau produit</a>
         </div>
     </div>
 
@@ -80,7 +80,7 @@
             <div class="dashboard-section">
                 <div class="section-header">
                     <h2>Mèches & Extensions</h2>
-                    <a href="{{ route('admin.products.index') }}" class="link-secondary">Voir tous →</a>
+                    <a href="{{ route('admin.products.index') }}" class="btn btn-secondary">Voir tous →</a>
                 </div>
                 <div class="table-responsive">
                     <table class="table-product">
@@ -133,7 +133,7 @@
             <div class="dashboard-section">
                 <div class="section-header">
                     <h2>Produits Capillaires</h2>
-                    <a href="{{ route('admin.products.index') }}" class="link-secondary">Voir tous →</a>
+                    <a href="{{ route('admin.products.index') }}" class="btn btn-secondary">Voir tous →</a>
                 </div>
                 <div class="table-responsive">
                     <table class="table-product">

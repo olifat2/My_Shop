@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Commande;
 use App\Models\Effets;
 use App\Models\Meche_Extension;
 use App\Models\Nature_Actions;
@@ -19,9 +18,8 @@ class AdminProductController extends Controller
      */
     public function index()
     {
-        $products = Product::with(['mecheExtension', 'produitCapillaire'])->paginate(10);
-        $totalOrders = Commande::count();
-        return view('admin.products.index', compact('products', 'totalOrders'));
+        $products = Product::with(['mecheExtension', 'produitCapillaire'])->get();
+        return view('admin.products.index', compact('products'));
     }
 
     /**
@@ -32,8 +30,7 @@ class AdminProductController extends Controller
         $techniques = Technique_Pose::all();
         $effets = Effets::all();
         $natures = Nature_Actions::all();
-        $totalOrders = Commande::count();
-        return view('admin.products.create', compact('techniques', 'effets', 'natures', 'totalOrders'));
+        return view('admin.products.create', compact('techniques', 'effets', 'natures'));
     }
 
     /**
@@ -91,8 +88,7 @@ class AdminProductController extends Controller
     public function show(Product $product)
     {
         $product->load(['mecheExtension', 'produitCapillaire']);
-        $totalOrders = Commande::count();
-        return view('admin.products.show', compact('product', 'totalOrders'));
+        return view('admin.products.show', compact('product'));
     }
 
     /**
@@ -101,8 +97,7 @@ class AdminProductController extends Controller
     public function edit(Product $product)
     {
         $product->load(['mecheExtension', 'produitCapillaire']);
-        $totalOrders = Commande::count();
-        return view('admin.products.edit', compact('product', 'totalOrders'));
+        return view('admin.products.edit', compact('product'));
     }
 
     /**

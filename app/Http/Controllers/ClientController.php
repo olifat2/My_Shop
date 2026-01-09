@@ -34,13 +34,6 @@ class ClientController extends Controller
         return view('client.products.show', compact('product'));
     }
 
-    // Dashboard client
-    public function dashboard()
-    {
-        $user = Auth::user();
-        return view('client.dashboard', compact('user'));
-    }
-
     // Panier du client
     public function cart()
     {

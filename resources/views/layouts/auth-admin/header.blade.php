@@ -63,7 +63,9 @@
                     <a href="{{ route('admin.orders.index') }}" class="nav-link {{ request()->routeIs('admin.orders.*') ? 'active' : '' }}">
                         <span class="nav-icon">📋</span>
                         <span class="nav-text">Commandes</span>
-                        <span class="nav-badge">{{ $totalOrders }}</span>
+                        @if(($newOrdersCount ?? 0) > 0)
+                        <span class="nav-badge">{{ $newOrdersCount }}</span>
+                        @endif
                     </a>
                 </li>
                 <li>
@@ -73,9 +75,12 @@
                     </a>
                 </li>
                 <li>
-                    <a href="#" class="nav-link {{ request()->routeIs('admin.clients.*') ? 'active' : '' }}">
+                    <a href="{{ route('admin.clients.index') }}" class="nav-link {{ request()->routeIs('admin.clients.*') ? 'active' : '' }}">
                         <span class="nav-icon">👥</span>
                         <span class="nav-text">Clients</span>
+                        @if(($newClientsCount ?? 0) > 0)
+                        <span class="nav-badge">{{ $newClientsCount }}</span>
+                        @endif
                     </a>
                 </li>
             </ul>

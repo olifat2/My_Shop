@@ -6,6 +6,7 @@ use App\Http\Controllers\AdminDashboardController;
 use App\Http\Controllers\AdminProductController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Client\ClientOrderController;
+use App\Http\Controllers\Client\ClientProfileController;
 use App\Http\Controllers\ClientController;
 use App\Http\Controllers\EffetController;
 use App\Http\Controllers\HomeController;
@@ -63,23 +64,38 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
 // -----------------------------------------
 Route::middleware(['auth', 'client'])->prefix('client')->name('client.')->group(function () {
 
-    Route::get('/accueil', [ClientController::class, 'home'])->name('accueil');
+    Route::get('/accueil', [ClientController::class, 'home'])
+        ->name('accueil');
 
-    // Dashboard client
-    Route::get('/dashboard', [ClientController::class, 'dashboard'])->name('dashboard');
+    // Profil client
+    Route::get('/profil', [ClientProfileController::class, 'show'])
+        ->name('profile.show');
+
+    Route::get('/profil/edition', [ClientProfileController::class, 'edit'])
+        ->name('profile.edit');
+
+    Route::put('/profil', [ClientProfileController::class, 'update'])
+        ->name('profile.update');
 
     // Catalogue
-    Route::get('/produits', [ClientController::class, 'listProducts'])->name('index');
-    Route::get('/produits/{product}', [ClientController::class, 'showProduct'])->name('product.show');
+    Route::get('/produits', [ClientController::class, 'listProducts'])
+        ->name('index');
+    Route::get('/produits/{product}', [ClientController::class, 'showProduct'])
+        ->name('product.show');
 
     // Panier
-    Route::get('/panier', [ClientController::class, 'cart'])->name('cart');
-    Route::post('/panier/ajouter/{id}', [ClientController::class, 'addToCart'])->name('cart.add');
-    Route::post('/panier/update/{id}', [ClientController::class, 'updateCart'])->name('cart.update');
-    Route::delete('/panier/supprimer/{id}', [ClientController::class, 'removeFromCart'])->name('cart.remove');
+    Route::get('/panier', [ClientController::class, 'cart'])
+        ->name('cart');
+    Route::post('/panier/ajouter/{id}', [ClientController::class, 'addToCart'])
+        ->name('cart.add');
+    Route::post('/panier/update/{id}', [ClientController::class, 'updateCart'])
+        ->name('cart.update');
+    Route::delete('/panier/supprimer/{id}', [ClientController::class, 'removeFromCart'])
+        ->name('cart.remove');
 
 
-    Route::resource('/orders', ClientOrderController::class)->names('orders');
+    Route::resource('/orders', ClientOrderController::class)
+        ->names('orders');
 
     // Route::get('/orders/{id}/confirmation', [ClientOrderController::class, 'confirmation'])->name('orders.confirmation');
 });

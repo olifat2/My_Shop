@@ -118,7 +118,7 @@
         <h2>Produits en vedette</h2>
         <p class="section-subtitle">Découvrez nos meilleurs ventes et nouveautés</p>
 
-        <div class="products-grid homeClient">
+        <div class="products-grid">
             @forelse ($items as $item)
             <article class="product-card" data-id="{{ $item->id }}" data-category="{{ $item->categorie }}" data-name="{{ $item->categorie === 'produit_capillaire' ? $item->produitCapillaire->nom : $item->mecheExtension->style }}">
 

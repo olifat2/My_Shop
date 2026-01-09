@@ -4,7 +4,7 @@
 
 <div class="index-products">
 
-    <div class="container">
+    <div>
 
         <!-- Section titre et description -->
         <div class="section-title">

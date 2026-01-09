@@ -7,6 +7,9 @@
             <h1>Commandes</h1>
             <p class="subtitle">Bienvenue ! Voici la liste de toutes vos commandes</p>
         </div>
+        <div class="header-actions-dash">
+            <a href="{{ route('client.profile.show') }}" class="btn btn-primary">Retour</a>
+        </div>
     </div>
 
     <div class="table-responsive">

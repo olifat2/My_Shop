@@ -14,9 +14,8 @@ class AdminOrderController extends Controller
     public function index()
     {
         $orders = Commande::with('client.user', 'statut')->latest()->get();
-        $totalOrders = Commande::count();
 
-        return view('admin.order.index', compact('orders', 'totalOrders'));
+        return view('admin.order.index', compact('orders'));
     }
 
     // Détails d’une commande
@@ -24,9 +23,8 @@ class AdminOrderController extends Controller
     {
         $order = Commande::with('client.user', 'items.product.mecheExtension', 'items.product.produitCapillaire', 'statut')->findOrFail($orderId);
         $statuts = StatutCommande::all();
-        $totalOrders = Commande::count();
 
-        return view('admin.order.show', compact('order', 'statuts', 'totalOrders'));
+        return view('admin.order.show', compact('order', 'statuts'));
     }
 
     // Mise à jour du statut

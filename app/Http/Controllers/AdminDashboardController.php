@@ -5,44 +5,25 @@ namespace App\Http\Controllers;
 use App\Models\Commande;
 use App\Models\Product;
 use App\Models\User;
-use Illuminate\Http\Request;
 
 class AdminDashboardController extends Controller
 {
     public function index()
     {
-        // Statistiques globales
         $totalProducts = Product::count();
-        $totalClients = User::where('role', 'client')->count();
+        $totalClients  = User::where('role', 'client')->count();
+        $totalOrders   = Commande::count();
 
-        // Exemple si tu ajoutes plus tard une table commandes
-        $totalOrders = Commande::count();
-        $orders = Commande::get();
-        $recentOrders = $orders->take(5);
+        $orders        = Commande::all();
+        $recentOrders  = $orders->take(5);
 
-        // Derniers produits ajoutés
-        $latestProductsMeche = Product::where('categorie', 'meche_extension')->latest()->take(5)->get();
-        $latestProductsCapillaire = Product::where('categorie', 'produit_capillaire')->latest()->take(5)->get();
+        $latestProductsMeche = $this->latestProductsByCategory('meche_extension');
+        $latestProductsCapillaire = $this->latestProductsByCategory('produit_capillaire');
 
-        $lowItems = $lowStockProducts ?? collect();
-        if (!isset($lowStockProducts)) {
-            $lowItems = collect();
-            if (isset($latestProductsMeche)) {
-                foreach ($latestProductsMeche as $p) {
-                    if ($p->stock->sum('quantite') <= 3) {
-                        $lowItems->push($p);
-                    }
-                }
-            }
-            if (isset($latestProductsCapillaire)) {
-                foreach ($latestProductsCapillaire as $p) {
-                    if ($p->stock->sum('quantite') <= 3) {
-                        $lowItems->push($p);
-                    }
-                }
-            }
-        }
-        $items = $lowItems->take(6);
+        $items = $this->lowStockProducts(
+            $latestProductsMeche,
+            $latestProductsCapillaire
+        )->take(6);
 
         return view('admin.dashboard', compact(
             'totalProducts',
@@ -54,5 +35,27 @@ class AdminDashboardController extends Controller
             'latestProductsCapillaire',
             'items'
         ));
+    }
+
+    /**
+     * Récupère les derniers produits par catégorie
+     */
+    private function latestProductsByCategory(string $category)
+    {
+        return Product::where('categorie', $category)
+            ->latest()
+            ->take(5)
+            ->get();
+    }
+
+    /**
+     * Retourne les produits avec stock faible
+     */
+    private function lowStockProducts(...$collections)
+    {
+        return collect($collections)
+            ->flatten()
+            ->filter(fn($product) => $product->stock->sum('quantite') <= 3)
+            ->values();
     }
 }

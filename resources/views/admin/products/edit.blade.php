@@ -17,7 +17,13 @@
             @method('PUT')
 
             <div class="form-group">
-                <label for="poids">Nom du produit</label>
+                <label for="{{
+                        $product->categorie === 'produit_capillaire'
+                            ? "nom"
+                            : "marque"
+                    }}">
+                    Nom du produit
+                </label>
                 <input type="text"
                     id="{{
                         $product->categorie === 'produit_capillaire'

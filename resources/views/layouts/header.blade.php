@@ -1,9 +1,9 @@
 <header class="navbar" role="banner">
     <div class="nav-logo">
         @auth
-        <a href="{{ route('client.accueil') }}">myshop</a>
+        <a href="{{ route('client.accueil') }}" title="Accueil">myshop</a>
         @else
-        <a href="{{ route('accueil') }}">myshop</a>
+        <a href="{{ route('accueil') }}" title="Accueil">myshop</a>
         @endauth
     </div>
 
@@ -60,7 +60,7 @@
         @auth
         <form class="first-form" action="{{ route('logout') }}" method="post">
             @csrf
-            <button type="submit" class="btn-header-first btn-icon">
+            <button type="submit" class="btn-header-first btn-icon" title="Se déconnecter">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
                     <path d="M16 13v-2H7V8l-5 4 5 4v-3h9z" fill="currentColor" />
                     <path d="M20 3H4a1 1 0 00-1 1v4h2V5h14v14H5v-3H3v4a1 1 0 001 1h16a1 1 0 001-1V4a1 1 0 00-1-1z" fill="currentColor" opacity="0.9" />
@@ -69,9 +69,9 @@
             </button>
         </form>
 
-        <form class="second-form" action="{{ route('client.dashboard') }}" method="get">
+        <form class="second-form" action="{{ route('client.profile.show') }}" method="get">
             @csrf
-            <button type="submit" class="btn-header-second btn-icon">
+            <button type="submit" class="btn-header-second btn-icon" title="Mon compte">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
                     <path d="M12 12a5 5 0 100-10 5 5 0 000 10zM2 20a10 10 0 0120 0H2z" fill="currentColor" />
                 </svg>
@@ -81,7 +81,7 @@
         @else
         <form class="first-form" action="{{ route('login.form') }}" method="get">
             @csrf
-            <button type="submit" class="btn-header-first btn-icon">
+            <button type="submit" class="btn-header-first btn-icon" title="Se connecter">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
                     <path d="M15 3H5a2 2 0 00-2 2v14h2V5h10V3z" fill="currentColor" />
                     <path d="M21 12l-4-4v3h-5v2h5v3l4-4z" fill="currentColor" />
@@ -92,7 +92,7 @@
 
         <form class="second-form" action="{{ route('register.form') }}" method="get">
             @csrf
-            <button type="submit" class="btn-header-second btn-icon">
+            <button type="submit" class="btn-header-second btn-icon" title="S'inscrire">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
                     <path d="M12 12a5 5 0 100-10 5 5 0 000 10z" fill="currentColor" />
                     <path d="M2 20a10 10 0 0120 0H2z" fill="currentColor" opacity="0.9" />

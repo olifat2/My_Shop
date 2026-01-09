@@ -8,7 +8,7 @@
             <p class="subtitle">Bienvenue ! Voici la liste de tous vos produits</p>
         </div>
         <div class="header-actions-dash">
-            <a href="{{ route('admin.products.create') }}" class="btn btn-primary">➕ Nouveau produit</a>
+            <a href="{{ route('admin.products.create') }}" class="btn btn-primary">Nouveau produit</a>
         </div>
     </div>
 
@@ -97,13 +97,6 @@
                 @endforelse
             </tbody>
         </table>
-    </div>
-    <div class="pagination-wrapper">
-        {{ $products->links() }}
-    </div>
-
-    <div class="pagination-wrapper">
-        <nav class="navigation"></nav>
     </div>
 </div>
 @endsection
