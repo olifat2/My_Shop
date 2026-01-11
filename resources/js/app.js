@@ -8,6 +8,10 @@ document.addEventListener('DOMContentLoaded', () => {
     initAdminSidebar();
     // ---------- PROFILE DROPDOWN ----------
     initProfileDropdown();
+    // ---------- THEME TOGGLE ----------
+    initThemeToggle();
+    // ---------- GLOBAL SHORTCUTS ----------
+    initGlobalShortcuts();
     // ---------- TABLE FILTER ----------
     initTableFilter();
     // ---------- CLIENT PRODUCT FILTER ----------
@@ -59,27 +63,115 @@ function initMobileHeader() {
     navMenu.querySelectorAll('a').forEach(link => link.addEventListener('click', closeMenu));
 }
 
+/* ===============================
+   SIDEBAR ADMIN
+=============================== */
 function initAdminSidebar() {
-    const toggleBtn = document.getElementById('toggleSidebar');
-    const closeBtn = document.getElementById('closeSidebar');
     const sidebar = document.getElementById('adminSidebar');
     const overlay = document.getElementById('sidebarOverlay');
-    if (!toggleBtn || !closeBtn || !sidebar || !overlay) return;
+    const openBtn = document.getElementById('toggleSidebar');
+    const closeBtn = document.getElementById('closeSidebar');
 
-    const closeSidebar = () => { sidebar.classList.remove('open'); overlay.classList.remove('show'); };
-    toggleBtn.addEventListener('click', () => { sidebar.classList.add('open'); overlay.classList.add('show'); });
-    closeBtn.addEventListener('click', closeSidebar);
-    overlay.addEventListener('click', closeSidebar);
+    if (!sidebar || !openBtn) return;
+
+    const openSidebar = () => {
+        sidebar.classList.add('open');
+        overlay?.classList.add('show');
+        openBtn.classList.add('active');
+        overlay?.setAttribute('aria-hidden', 'false');
+        openBtn.setAttribute('aria-expanded', 'true');
+    };
+
+    const closeSidebar = () => {
+        sidebar.classList.remove('open');
+        overlay?.classList.remove('show');
+        openBtn.classList.remove('active');
+        overlay?.setAttribute('aria-hidden', 'true');
+        openBtn.setAttribute('aria-expanded', 'false');
+    };
+
+    openBtn.addEventListener('click', () => {
+        sidebar.classList.contains('open') ? closeSidebar() : openSidebar();
+    });
+
+    closeBtn?.addEventListener('click', closeSidebar);
+    overlay?.addEventListener('click', closeSidebar);
+
+    // Expose pour ESC
+    globalThis.__closeSidebar = closeSidebar;
 }
 
+/* ===============================
+   PROFILE DROPDOWN
+=============================== */
 function initProfileDropdown() {
-    const profileToggle = document.getElementById('profileToggle');
-    const profileDropdown = document.getElementById('profileDropdown');
-    if (!profileToggle || !profileDropdown) return;
+    const toggle = document.getElementById('profileToggle');
+    const dropdown = document.getElementById('profileDropdown');
 
-    profileToggle.addEventListener('click', e => { e.stopPropagation(); profileDropdown.classList.toggle('active'); });
-    document.addEventListener('click', () => profileDropdown.classList.remove('active'));
-    profileDropdown.addEventListener('click', e => e.stopPropagation());
+    if (!toggle || !dropdown) return;
+
+    const closeDropdown = () => {
+        dropdown.classList.remove('active');
+        toggle.setAttribute('aria-expanded', 'false');
+    };
+
+    toggle.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const isOpen = dropdown.classList.toggle('active');
+        toggle.classList.toggle('active', isOpen);
+        toggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+        dropdown.setAttribute('aria-hidden', isOpen ? 'false' : 'true');
+    });
+
+    document.addEventListener('click', (e) => {
+        if (!dropdown.contains(e.target) && !toggle.contains(e.target)) {
+            closeDropdown();
+        }
+    });
+
+    globalThis.__closeProfileDropdown = closeDropdown;
+}
+
+/* ===============================
+   THEME TOGGLE (LIGHT / DARK)
+=============================== */
+function initThemeToggle() {
+    const toggle = document.getElementById('themeToggle');
+    if (!toggle) return;
+
+    const body = document.body;
+
+    const applyTheme = (theme) => {
+        body.dataset.theme = theme;
+        localStorage.setItem('theme', theme);
+        toggle.setAttribute('aria-pressed', theme === 'dark' ? 'true' : 'false');
+        toggle.classList.toggle('active', theme === 'dark');
+    };
+
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme) {
+        applyTheme(savedTheme);
+    } else {
+        const prefersDark = globalThis.matchMedia('(prefers-color-scheme: dark)').matches;
+        applyTheme(prefersDark ? 'dark' : 'light');
+    }
+
+    toggle.addEventListener('click', () => {
+        const current = body.dataset.theme;
+        applyTheme(current === 'dark' ? 'light' : 'dark');
+    });
+}
+
+/* ===============================
+   GLOBAL SHORTCUTS
+=============================== */
+function initGlobalShortcuts() {
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+            globalThis.__closeSidebar?.();
+            globalThis.__closeProfileDropdown?.();
+        }
+    });
 }
 
 function initTableFilter() {
@@ -156,8 +248,14 @@ function initMiniCartAjax() {
         }
     };
 
-    cartLink.addEventListener('click', e => { e.preventDefault(); miniCart.classList.toggle('active'); });
-    document.addEventListener('click', e => { if (!miniCart.contains(e.target) && !cartLink.contains(e.target)) miniCart.classList.remove('active'); });
+    cartLink.setAttribute('role', 'button');
+    cartLink.setAttribute('aria-expanded', 'false');
+    cartLink.addEventListener('click', e => {
+        e.preventDefault();
+        const isOpen = miniCart.classList.toggle('active');
+        cartLink.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+    });
+    document.addEventListener('click', e => { if (!miniCart.contains(e.target) && !cartLink.contains(e.target)) { miniCart.classList.remove('active'); cartLink.setAttribute('aria-expanded', 'false'); } });
 
     document.body.addEventListener('submit', e => {
         const form = e.target.closest('.product-card form, .update-cart-form, .remove-cart-form');
