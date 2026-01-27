@@ -77,13 +77,13 @@
                 aria-label="Menu utilisateur"
                 aria-hidden="true">
 
+                <button class="dropdown-item" role="menuitem">Mon profil</button>
+                <button class="dropdown-item" role="menuitem">Paramètres</button>
+
+                <div class="dropdown-divider" role="separator"></div>
+
                 <form method="POST" action="{{ route('logout') }}">
                     @csrf
-                    <button class="dropdown-item" role="menuitem">Mon profil</button>
-                    <button class="dropdown-item" role="menuitem">Paramètres</button>
-
-                    <div class="dropdown-divider" role="separator"></div>
-
                     <button
                         type="submit"
                         class="dropdown-item logout-btn"
