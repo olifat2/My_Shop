@@ -317,7 +317,7 @@ input {
     background: none;
     border: none;
     font-size: 0.9rem;
-    transition: background var(--transition);
+    transition: background var(--transition) color var(--transition);
 }
 
 .dropdown-item:hover {
