@@ -154,7 +154,7 @@
                         <span class="nav-text">Clients</span>
 
                         @if(($newClientsCount ?? 0) > 0)
-                        <span class="nav-badge success">{{ $newClientsCount }}</span>
+                        <span class="nav-badge">{{ $newClientsCount }}</span>
                         @endif
                     </a>
                 </li>

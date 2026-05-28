@@ -149,7 +149,7 @@
                             </tr>
                             @empty
                             <tr>
-                                <td colspan="6" class="empty-state">📭 Aucun produit récent</td>
+                                <td colspan="6" class="empty">📭 Aucun produit récent</td>
                             </tr>
                             @endforelse
                         </tbody>
@@ -240,7 +240,7 @@
                         <a href="{{ route('admin.orders.show', $order->id) }}" class="btn btn-view">
                             Commande #{{ $order->id }} — {{ number_format($order->total,0,',',' ') }} FCFA
                         </a>
-                        <span class="muted">· {{ $order->created_at->diffForHumans() }}</span>
+                        <span class="muted"> {{ $order->created_at->diffForHumans() }}</span>
                     </li>
                     @empty
                     <li class="empty-state">Aucune commande récente.</li>

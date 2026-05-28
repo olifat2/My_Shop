@@ -1,24 +1,28 @@
+import { defineConfig, loadEnv } from 'vite';
 import laravel from 'laravel-vite-plugin';
-import { defineConfig } from 'vite';
 
 
-export default defineConfig({
-    plugins: [
-        laravel({
-            input: ['resources/css/app.css', 'resources/js/app.js'],
-            refresh: true,
-        }),
-    ],
-    server: {
-        host: '0.0.0.0',
-        port: 5173,
-        strictPort: true,
-        origin: 'http://10.72.26.153:5173',
-        hmr: {
-            host: '10.72.26.153',
-            protocol: 'ws',
-            port: 5173,
+export default defineConfig(({ mode }) => {
+    const env = loadEnv(mode, process.cwd(), '');
+
+    return {
+        plugins: [
+            laravel({
+                input: ['resources/css/app.css', 'resources/js/app.js'],
+                refresh: true,
+            }),
+        ],
+        server: {
+            host: '0.0.0.0',
+            port: Number(env.VITE_DEV_SERVER_PORT),
+            strictPort: true,
+            origin: env.VITE_DEV_SERVER_URL,
+            hmr: {
+                host: env.VITE_DEV_SERVER_HOST,
+                protocol: 'ws',
+                port: Number(env.VITE_DEV_SERVER_PORT),
+            },
+            cors: true,
         },
-        cors: true,
-    },
+    };
 });
