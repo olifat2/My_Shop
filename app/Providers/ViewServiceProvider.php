@@ -2,10 +2,10 @@
 
 namespace App\Providers;
 
-use Illuminate\Support\ServiceProvider;
-use Illuminate\Support\Facades\View;
 use App\Models\Commande;
 use App\Models\User;
+use Illuminate\Support\Facades\View;
+use Illuminate\Support\ServiceProvider;
 
 class ViewServiceProvider extends ServiceProvider
 {
@@ -22,7 +22,7 @@ class ViewServiceProvider extends ServiceProvider
 
         // Partage global
         View::share([
-            'newOrdersCount'  => $newOrdersCount,
+            'newOrdersCount' => $newOrdersCount,
             'newClientsCount' => $newClientsCount,
         ]);
     }

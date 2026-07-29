@@ -10,7 +10,8 @@ class Product extends Model
 
     protected $fillable = ['categorie', 'poids', 'prix_unitaire'];
 
-    public function mecheExtension() {
+    public function mecheExtension()
+    {
         return $this->hasOne(Meche_Extension::class, 'product_id');
     }
 
@@ -27,5 +28,10 @@ class Product extends Model
     public function commandeItems()
     {
         return $this->hasMany(CommandeItem::class);
+    }
+
+    public function stockMovements()
+    {
+        return $this->hasMany(StockMovement::class);
     }
 }

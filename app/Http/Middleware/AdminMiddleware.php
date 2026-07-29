@@ -14,6 +14,6 @@ class AdminMiddleware
             return $next($request);
         }
 
-        abort(403, "Accès réservé à l’administrateur.");
+        abort(403, 'Accès réservé à l’administrateur.');
     }
 }

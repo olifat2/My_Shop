@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\Product;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 
 class ClientController extends Controller
 {
@@ -14,7 +13,7 @@ class ClientController extends Controller
         $products = Product::with(['mecheExtension', 'produitCapillaire'])->get();
 
         // Filtrer les produits avec stock >= 10 pour les mettre en vedette
-        $highItems = collect($products)->filter(fn($p) => $p->stock->sum('quantite') >= 10);
+        $highItems = collect($products)->filter(fn ($p) => $p->stock->sum('quantite') >= 10);
         $items = $highItems->take(4);
 
         return view('client.homeClient', compact('items'));
@@ -24,6 +23,7 @@ class ClientController extends Controller
     public function listProducts()
     {
         $products = Product::with(['mecheExtension', 'produitCapillaire'])->get();
+
         return view('client.products.index', compact('products'));
     }
 
@@ -31,6 +31,7 @@ class ClientController extends Controller
     public function showProduct(Product $product)
     {
         $product->load(['mecheExtension', 'produitCapillaire']);
+
         return view('client.products.show', compact('product'));
     }
 
@@ -75,8 +76,8 @@ class ClientController extends Controller
             return response()->json([
                 'success' => true,
                 'count' => collect(session('cart', []))->sum('qty'),
-                'total' => array_sum(array_map(fn($item) => $item['subtotal'], session('cart', []))),
-                'items' => session('cart', [])
+                'total' => array_sum(array_map(fn ($item) => $item['subtotal'], session('cart', []))),
+                'items' => session('cart', []),
             ]);
         }
 
@@ -100,7 +101,7 @@ class ClientController extends Controller
                 'success' => true,
                 'itemSubtotal' => $cart[$productId]['subtotal'] ?? 0,
                 'total' => collect($cart)->sum('subtotal'),
-                'count' => collect($cart)->sum('qty')
+                'count' => collect($cart)->sum('qty'),
             ]);
         }
 
@@ -122,7 +123,7 @@ class ClientController extends Controller
                 'success' => true,
                 'total' => collect($cart)->sum('subtotal'),
                 'count' => collect($cart)->sum('qty'),
-                'items' => $cart // Pour mini-cart dynamique
+                'items' => $cart, // Pour mini-cart dynamique
             ]);
         }
 

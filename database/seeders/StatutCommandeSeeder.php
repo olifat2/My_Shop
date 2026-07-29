@@ -3,7 +3,6 @@
 namespace Database\Seeders;
 
 use App\Models\StatutCommande;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 class StatutCommandeSeeder extends Seeder
@@ -13,11 +12,8 @@ class StatutCommandeSeeder extends Seeder
      */
     public function run()
     {
-        StatutCommande::insert([
-            ['nom' => 'en_attente'],
-            ['nom' => 'payee'],
-            ['nom' => 'annulee'],
-            ['nom' => 'livree'],
-        ]);
+        foreach (['en_attente', 'payee', 'annulee', 'livree'] as $statut) {
+            StatutCommande::firstOrCreate(['nom' => $statut]);
+        }
     }
 }

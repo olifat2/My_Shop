@@ -12,19 +12,12 @@ use App\Http\Controllers\EffetController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\NatureActionController;
 use App\Http\Controllers\TechniquePoseController;
-use App\Models\Product;
 use Illuminate\Support\Facades\Route;
 
 // -----------------------------------------
 // PAGE D’ACCUEIL PUBLIQUE
 // -----------------------------------------
-$latestProducts = Product::with(['mecheExtension', 'produitCapillaire'])->get();
-
-// Filtrer les produits avec stock >= 10 pour les mettre en vedette
-$highItems = collect($latestProducts)->filter(fn($p) => $p->stock->sum('quantite') >= 10);
-
-Route::view('/', 'home', compact('highItems'))->name('home');
-
+Route::get('/', [HomeController::class, 'showAccueilScreen'])->name('home');
 Route::get('/accueil', [HomeController::class, 'showAccueilScreen'])->name('accueil');
 Route::get('/produits', [HomeController::class, 'listProducts'])->name('catalogue');
 Route::get('/produits/{product}', [HomeController::class, 'showProduct'])->name('product.show');
@@ -54,7 +47,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
 
     // CRUD Products / Orders / Clients
     Route::resource('/products', AdminProductController::class)->names('products');
-    Route::resource('/orders', AdminOrderController::class)->names('orders');
+    Route::resource('/orders', AdminOrderController::class)->only(['index', 'show'])->names('orders');
     Route::post('/orders/updateStatus/{id}', [AdminOrderController::class, 'updateStatus'])->name('orders.updateStatus');
     Route::resource('/clients', AdminClientController::class)->names('clients');
 });
@@ -93,8 +86,8 @@ Route::middleware(['auth', 'client'])->prefix('client')->name('client.')->group(
     Route::delete('/panier/supprimer/{id}', [ClientController::class, 'removeFromCart'])
         ->name('cart.remove');
 
-
     Route::resource('/orders', ClientOrderController::class)
+        ->only(['index', 'store', 'show'])
         ->names('orders');
 
     // Route::get('/orders/{id}/confirmation', [ClientOrderController::class, 'confirmation'])->name('orders.confirmation');

@@ -8,8 +8,11 @@ use App\Models\Nature_Actions;
 use App\Models\Product;
 use App\Models\Produit_Capillaire;
 use App\Models\Stock;
+use App\Models\StockMovement;
 use App\Models\Technique_Pose;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class AdminProductController extends Controller
 {
@@ -18,7 +21,8 @@ class AdminProductController extends Controller
      */
     public function index()
     {
-        $products = Product::with(['mecheExtension', 'produitCapillaire'])->get();
+        $products = Product::with(['mecheExtension', 'produitCapillaire', 'stock'])->get();
+
         return view('admin.products.index', compact('products'));
     }
 
@@ -30,6 +34,7 @@ class AdminProductController extends Controller
         $techniques = Technique_Pose::all();
         $effets = Effets::all();
         $natures = Nature_Actions::all();
+
         return view('admin.products.create', compact('techniques', 'effets', 'natures'));
     }
 
@@ -38,46 +43,58 @@ class AdminProductController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
+        $validated = $request->validate([
             'categorie' => 'required|string|in:meche_extension,produit_capillaire',
             'poids' => 'required|numeric|min:0',
             'prix_unitaire' => 'required|numeric|min:0',
             'quantite' => 'required|integer|min:0',
         ]);
 
-        // Création du produit principal
-        $product = Product::create([
-            'categorie' => $request->categorie,
-            'poids' => $request->poids,
-            'prix_unitaire' => $request->prix_unitaire,
-        ]);
-
-        // Détails spécifiques
-        if ($request->categorie === 'meche_extension') {
-            Meche_Extension::create([
-                'product_id' => $product->id,
-                'nature' => $request->nature,
-                'marque' => $request->marque,
-                'style' => $request->style,
-                'height' => $request->height,
-                'pcs' => $request->pcs,
-                'technique_pose_id' => $request->technique_pose_id,
+        DB::transaction(function () use ($request, $validated) {
+            // Création du produit principal
+            $product = Product::create([
+                'categorie' => $validated['categorie'],
+                'poids' => $validated['poids'],
+                'prix_unitaire' => $validated['prix_unitaire'],
             ]);
-        } elseif ($request->categorie === 'produit_capillaire') {
-            Produit_Capillaire::create([
-                'product_id' => $product->id,
-                'nom' => $request->nom,
-                'volume' => $request->volume,
-                'effet_id' => $request->effet_id,
-                'nature_action_id' => $request->nature_action_id,
-            ]);
-        }
 
-        // Création du stock initial
-        Stock::create([
-            'product_id' => $product->id,
-            'quantite' => $request->quantite,
-        ]);
+            // Détails spécifiques
+            if ($validated['categorie'] === 'meche_extension') {
+                Meche_Extension::create([
+                    'product_id' => $product->id,
+                    'nature' => $request->nature,
+                    'marque' => $request->marque,
+                    'style' => $request->style,
+                    'height' => $request->height,
+                    'pcs' => $request->pcs,
+                    'technique_pose_id' => $request->technique_pose_id,
+                ]);
+            } elseif ($validated['categorie'] === 'produit_capillaire') {
+                Produit_Capillaire::create([
+                    'product_id' => $product->id,
+                    'nom' => $request->nom,
+                    'volume' => $request->volume,
+                    'effet_id' => $request->effet_id,
+                    'nature_action_id' => $request->nature_action_id,
+                ]);
+            }
+
+            // Création du stock initial
+            Stock::create([
+                'product_id' => $product->id,
+                'quantite' => $validated['quantite'],
+            ]);
+
+            StockMovement::create([
+                'product_id' => $product->id,
+                'user_id' => Auth::id(),
+                'type' => 'initial',
+                'quantity_change' => $validated['quantite'],
+                'before_quantity' => 0,
+                'after_quantity' => $validated['quantite'],
+                'note' => 'Stock initial à la création du produit',
+            ]);
+        });
 
         return redirect()->route('admin.products.create')->with('success', 'Produit ajouté avec succès.');
     }
@@ -87,7 +104,14 @@ class AdminProductController extends Controller
      */
     public function show(Product $product)
     {
-        $product->load(['mecheExtension', 'produitCapillaire']);
+        $product->load([
+            'mecheExtension.techniquePose',
+            'produitCapillaire.effet',
+            'produitCapillaire.natureAction',
+            'stock',
+            'stockMovements.user',
+        ]);
+
         return view('admin.products.show', compact('product'));
     }
 
@@ -97,6 +121,7 @@ class AdminProductController extends Controller
     public function edit(Product $product)
     {
         $product->load(['mecheExtension', 'produitCapillaire']);
+
         return view('admin.products.edit', compact('product'));
     }
 
@@ -122,7 +147,26 @@ class AdminProductController extends Controller
             $product->produitCapillaire->update($request->only(['nom', 'effet_id', 'nature_action_id', 'volume']));
         }
 
-        $product->stock->update($validatedStock);
+        $stock = $product->stock()->first();
+        $beforeQuantity = $stock?->quantite ?? 0;
+        $afterQuantity = $validatedStock['quantite'];
+
+        $product->stock()->updateOrCreate(
+            ['product_id' => $product->id],
+            $validatedStock
+        );
+
+        if ($beforeQuantity !== $afterQuantity) {
+            StockMovement::create([
+                'product_id' => $product->id,
+                'user_id' => Auth::id(),
+                'type' => 'adjustment',
+                'quantity_change' => $afterQuantity - $beforeQuantity,
+                'before_quantity' => $beforeQuantity,
+                'after_quantity' => $afterQuantity,
+                'note' => 'Ajustement manuel du stock',
+            ]);
+        }
 
         return redirect()->route('admin.products.index')->with('success', 'Produit mis à jour avec succès.');
     }

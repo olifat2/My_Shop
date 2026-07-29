@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Commande;
+use App\Models\Client;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use App\Models\User;
+use Illuminate\Support\Facades\DB;
 
 class AuthController extends Controller
 {
@@ -21,31 +22,30 @@ class AuthController extends Controller
 
     public function register(Request $request)
     {
-        $request->validate([
+        $validated = $request->validate([
             'firstname' => 'required|string|max:255',
-            'lastname'  => 'required|string|max:255',
-            'email'     => 'required|email|unique:users,email',
-            'password'  => 'required|string|min:6|confirmed',
-            'phone'     => 'nullable|string|max:20',
-            'role'      => 'required|in:client,admin',
+            'lastname' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email',
+            'password' => 'required|string|min:8|confirmed',
+            'phone' => 'nullable|string|max:20',
         ]);
 
-        // Création automatique avec hash via mutateur du modèle
-        $user = User::create($request->only([
-            'firstname',
-            'lastname',
-            'email',
-            'password',
-            'phone',
-            'role'
-        ]));
+        $user = DB::transaction(function () use ($validated) {
+            $user = User::create([
+                'firstname' => $validated['firstname'],
+                'lastname' => $validated['lastname'],
+                'email' => $validated['email'],
+                'password' => $validated['password'],
+                'phone' => $validated['phone'] ?? null,
+                'role' => 'client',
+            ]);
+
+            Client::create(['user_id' => $user->id]);
+
+            return $user;
+        });
 
         Auth::login($user);
-
-        // Redirection selon le rôle
-        if ($user->isAdmin()) {
-            return redirect()->route('admin.dashboard');
-        }
 
         return redirect()->route('client.accueil');
     }
@@ -54,7 +54,7 @@ class AuthController extends Controller
     {
         $credentials = $request->validate([
             'email' => 'required|email',
-            'password' => 'required'
+            'password' => 'required',
         ]);
 
         if (Auth::attempt($credentials)) {

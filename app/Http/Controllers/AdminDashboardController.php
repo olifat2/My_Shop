@@ -11,11 +11,11 @@ class AdminDashboardController extends Controller
     public function index()
     {
         $totalProducts = Product::count();
-        $totalClients  = User::where('role', 'client')->count();
-        $totalOrders   = Commande::count();
+        $totalClients = User::where('role', 'client')->count();
+        $totalOrders = Commande::count();
 
-        $orders        = Commande::all();
-        $recentOrders  = $orders->take(5);
+        $orders = Commande::all();
+        $recentOrders = $orders->take(5);
 
         $latestProductsMeche = $this->latestProductsByCategory('meche_extension');
         $latestProductsCapillaire = $this->latestProductsByCategory('produit_capillaire');
@@ -55,7 +55,7 @@ class AdminDashboardController extends Controller
     {
         return collect($collections)
             ->flatten()
-            ->filter(fn($product) => $product->stock->sum('quantite') <= 3)
+            ->filter(fn ($product) => $product->stock->sum('quantite') <= 3)
             ->values();
     }
 }

@@ -9,6 +9,7 @@ class Meche_Extension extends Model
     protected $table = 'meche_extensions';
 
     protected $fillable = ['product_id', 'nature', 'marque', 'style', 'technique_pose_id', 'pcs', 'height'];
+
     public $incrementing = false;
 
     public function product()

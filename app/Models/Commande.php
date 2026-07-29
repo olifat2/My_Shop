@@ -7,7 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 class Commande extends Model
 {
     protected $table = 'commandes';
-    protected $fillable = ['client_id', 'statut_id', 'total'];
+
+    protected $fillable = ['client_id', 'statut_id', 'reference', 'total'];
 
     public function client()
     {
@@ -22,5 +23,10 @@ class Commande extends Model
     public function items()
     {
         return $this->hasMany(CommandeItem::class);
+    }
+
+    public function stockMovements()
+    {
+        return $this->hasMany(StockMovement::class);
     }
 }

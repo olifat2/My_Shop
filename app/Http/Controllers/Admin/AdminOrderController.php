@@ -4,9 +4,8 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Commande;
-use Illuminate\Http\Request;
-use App\Models\Order;
 use App\Models\StatutCommande;
+use Illuminate\Http\Request;
 
 class AdminOrderController extends Controller
 {

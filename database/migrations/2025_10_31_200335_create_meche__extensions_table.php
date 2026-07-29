@@ -13,14 +13,13 @@ return new class extends Migration
     {
         Schema::create('meche_extensions', function (Blueprint $table) {
             $table->id();
-            $table->foreign('product_id')->references('id')->on('products')->onDelete('cascade');
-            $table->unsignedBigInteger('product_id');
+            $table->foreignId('product_id')->unique()->constrained('products')->onDelete('cascade');
             $table->string('nature');
             $table->string('marque');
             $table->string('style');
             $table->unsignedBigInteger('technique_pose_id');
             $table->string('pcs');
-            $table->decimal('height', 5, 12);
+            $table->decimal('height', 8, 2);
 
             $table->timestamps();
         });
@@ -31,6 +30,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('meche__extensions');
+        Schema::dropIfExists('meche_extensions');
     }
 };

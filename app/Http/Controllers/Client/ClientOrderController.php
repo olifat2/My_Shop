@@ -3,13 +3,14 @@
 namespace App\Http\Controllers\Client;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Http\Request;
 use App\Models\Commande;
 use App\Models\CommandeItem;
-use App\Models\LigneCommande;
+use App\Models\Product;
 use App\Models\StatutCommande;
+use App\Models\StockMovement;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class ClientOrderController extends Controller
 {
@@ -19,7 +20,7 @@ class ClientOrderController extends Controller
     public function index()
     {
         $user = Auth::user();
-        $client = $user->client;
+        $client = $user->client()->firstOrCreate([]);
 
         $orders = $client->commandes()
             ->with('statut')
@@ -35,14 +36,14 @@ class ClientOrderController extends Controller
     public function show($orderId)
     {
         $user = Auth::user();
-        $client = $user->client;
+        $client = $user->client()->firstOrCreate([]);
 
         $order = $client->commandes()
             ->where('id', $orderId)
             ->with([
                 'items.product.mecheExtension',
                 'items.product.produitCapillaire',
-                'statut'
+                'statut',
             ])
             ->firstOrFail();
 
@@ -57,7 +58,7 @@ class ClientOrderController extends Controller
     public function store(Request $request)
     {
         $user = Auth::user();
-        $client = $user->client;
+        $client = $user->client()->firstOrCreate([]);
         $cart = session()->get('cart', []);
 
         if (empty($cart)) {
@@ -67,26 +68,61 @@ class ClientOrderController extends Controller
         DB::beginTransaction();
 
         try {
-            $total = collect($cart)->sum('subtotal');
-
+            $productIds = collect($cart)->pluck('id')->all();
+            $products = Product::with('stock')->whereIn('id', $productIds)->get()->keyBy('id');
             $statut = StatutCommande::where('nom', 'en_attente')->firstOrFail();
+            $total = 0;
 
             $commande = Commande::create([
                 'client_id' => $client->id,
                 'statut_id' => $statut->id,
-                'total' => $total,
-                'reference' => 'CMD-' . strtoupper(uniqid()),
+                'reference' => 'CMD-'.strtoupper(uniqid()),
+                'total' => 0,
             ]);
 
             foreach ($cart as $item) {
+                $product = $products->get($item['id']);
+
+                if (! $product) {
+                    throw new \RuntimeException('Produit introuvable.');
+                }
+
+                $quantity = max(1, (int) $item['qty']);
+                $stock = $product->stock()->lockForUpdate()->first();
+
+                if (! $stock || $stock->quantite < $quantity) {
+                    throw new \RuntimeException('Stock insuffisant pour un ou plusieurs produits.');
+                }
+
+                $price = $product->prix_unitaire;
+                $subtotal = $quantity * $price;
+                $total += $subtotal;
+
                 CommandeItem::create([
                     'commande_id' => $commande->id,
-                    'product_id' => $item['id'],
-                    'quantity' => $item['qty'],
-                    'price' => $item['price'],
-                    'subtotal' => $item['subtotal'],
+                    'product_id' => $product->id,
+                    'quantity' => $quantity,
+                    'price' => $price,
+                    'subtotal' => $subtotal,
+                ]);
+
+                $beforeQuantity = $stock->quantite;
+                $stock->decrement('quantite', $quantity);
+                $afterQuantity = $beforeQuantity - $quantity;
+
+                StockMovement::create([
+                    'product_id' => $product->id,
+                    'user_id' => $user->id,
+                    'commande_id' => $commande->id,
+                    'type' => 'sale',
+                    'quantity_change' => -$quantity,
+                    'before_quantity' => $beforeQuantity,
+                    'after_quantity' => $afterQuantity,
+                    'note' => 'Sortie de stock liée à une commande client',
                 ]);
             }
+
+            $commande->update(['total' => $total]);
 
             // Vider le panier
             session()->forget('cart');
@@ -99,7 +135,7 @@ class ClientOrderController extends Controller
         } catch (\Exception $e) {
             DB::rollBack();
 
-            return redirect()->back()->with('error', 'Erreur lors de la création de la commande.');
+            return redirect()->back()->with('error', $e->getMessage() ?: 'Erreur lors de la création de la commande.');
         }
     }
 
@@ -109,10 +145,10 @@ class ClientOrderController extends Controller
     public function confirmation($orderId)
     {
         $user = Auth::user();
-        $client = $user->client;
+        $client = $user->client()->firstOrCreate([]);
 
         $order = $client->commandes()
-            ->with('statutCommande')
+            ->with('statut')
             ->findOrFail($orderId);
 
         return view('client.order.confirmation', compact('order'));

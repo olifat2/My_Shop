@@ -9,6 +9,7 @@ class Produit_Capillaire extends Model
     protected $table = 'produit_capillaires';
 
     protected $fillable = ['product_id', 'nom', 'effet_id', 'nature_action_id', 'volume'];
+
     public $incrementing = false;
 
     public function product()

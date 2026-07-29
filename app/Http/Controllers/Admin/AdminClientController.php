@@ -3,8 +3,9 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
+use App\Models\Client;
 use App\Models\User;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
 
@@ -40,6 +41,32 @@ class AdminClientController extends Controller
     }
 
     /**
+     * Enregistrer un nouveau client
+     */
+    public function store(Request $request)
+    {
+        $data = $request->validate([
+            'firstname' => 'required|string|max:255',
+            'lastname' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email',
+            'password' => ['required', 'confirmed', Password::min(8)],
+        ]);
+
+        $user = User::create([
+            'firstname' => $data['firstname'],
+            'lastname' => $data['lastname'],
+            'email' => $data['email'],
+            'password' => $data['password'],
+            'role' => 'client',
+        ]);
+
+        Client::create(['user_id' => $user->id]);
+
+        return redirect()->route('admin.clients.index')
+            ->with('success', 'Client créé avec succès.');
+    }
+
+    /**
      * Afficher le formulaire de modification
      */
     public function edit($id)
@@ -58,12 +85,12 @@ class AdminClientController extends Controller
 
         $data = $request->validate([
             'firstname' => 'required|string|max:255',
-            'lastname'  => 'required|string|max:255',
-            'email'     => 'required|email|unique:users,email,' . $client->id,
-            'password'  => ['nullable', 'confirmed', Password::min(8)],
+            'lastname' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email,'.$client->id,
+            'password' => ['nullable', 'confirmed', Password::min(8)],
         ]);
 
-        if (!empty($data['password'])) {
+        if (! empty($data['password'])) {
             $data['password'] = Hash::make($data['password']);
         } else {
             unset($data['password']); // ne pas modifier si vide

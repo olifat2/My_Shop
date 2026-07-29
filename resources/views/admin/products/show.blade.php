@@ -81,5 +81,55 @@
         @endif
 
     </div>
+
+    <div class="card-detail-product">
+        <div class="product-header">
+            <h2 class="product-title">Historique du stock</h2>
+            <span class="product-category">
+                {{ $product->stockMovements->count() }} mouvement(s)
+            </span>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="table-responsive">
+            <table class="table-product">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Type</th>
+                        <th>Variation</th>
+                        <th>Avant</th>
+                        <th>Après</th>
+                        <th>Utilisateur</th>
+                        <th>Note</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @forelse($product->stockMovements->sortByDesc('created_at') as $movement)
+                    <tr>
+                        <td data-label="Date">{{ $movement->created_at->format('d/m/Y H:i') }}</td>
+                        <td data-label="Type">{{ ucfirst($movement->type) }}</td>
+                        <td data-label="Variation">
+                            <span class="stock-badge {{ $movement->quantity_change >= 0 ? 'stock-high' : 'stock-low' }}">
+                                {{ $movement->quantity_change > 0 ? '+' : '' }}{{ $movement->quantity_change }}
+                            </span>
+                        </td>
+                        <td data-label="Avant">{{ $movement->before_quantity ?? '-' }}</td>
+                        <td data-label="Après">{{ $movement->after_quantity }}</td>
+                        <td data-label="Utilisateur">
+                            {{ $movement->user ? $movement->user->firstname . ' ' . $movement->user->lastname : 'Système' }}
+                        </td>
+                        <td data-label="Note">{{ $movement->note ?? '-' }}</td>
+                    </tr>
+                    @empty
+                    <tr>
+                        <td colspan="7">Aucun mouvement de stock enregistré.</td>
+                    </tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
+    </div>
 </div>
 @endsection

@@ -38,8 +38,8 @@ class ClientProfileController extends Controller
 
         $validated = $request->validate([
             'firstname' => ['required', 'string', 'max:100'],
-            'lastname'  => ['required', 'string', 'max:100'],
-            'email'     => [
+            'lastname' => ['required', 'string', 'max:100'],
+            'email' => [
                 'required',
                 'email',
                 'max:255',

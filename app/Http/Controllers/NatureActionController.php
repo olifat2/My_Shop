@@ -16,6 +16,7 @@ class NatureActionController extends Controller
         Nature_Actions::create([
             'nom' => $request->nom,
         ]);
+
         return redirect()
             ->route('admin.products.create')->with('success', "Vous venez d'ajouter une nouvelle nature d'action pour vos produits capillaires.");
     }

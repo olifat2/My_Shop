@@ -13,12 +13,11 @@ return new class extends Migration
     {
         Schema::create('produit_capillaires', function (Blueprint $table) {
             $table->id();
-            $table->foreign('product_id')->references('id')->on('products')->onDelete('cascade');
-            $table->unsignedBigInteger('product_id');
+            $table->foreignId('product_id')->unique()->constrained('products')->onDelete('cascade');
             $table->string('nom');
             $table->unsignedBigInteger('effet_id');
             $table->unsignedBigInteger('nature_action_id');
-            $table->decimal('volume', 5, 12);
+            $table->decimal('volume', 8, 2);
 
             $table->timestamps();
         });
@@ -29,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('produit__capillaires');
+        Schema::dropIfExists('produit_capillaires');
     }
 };
